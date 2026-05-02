@@ -49,8 +49,14 @@
     @apply border-border;
   }
   body {
-    @apply bg-[#061a12] text-[#f6f6e9] antialiased;
+    @apply bg-[#061a12] text-[#f6f6e9] antialiased overflow-x-hidden;
     font-family: 'OutfitLocal', sans-serif !important;
+    max-width: 100vw;
+  }
+  
+  html {
+    @apply overflow-x-hidden;
+    max-width: 100vw;
   }
   
   *, *::before, *::after {
