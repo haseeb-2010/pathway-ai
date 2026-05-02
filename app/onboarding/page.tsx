@@ -1,0 +1,737 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { 
+  ArrowRight, 
+  ArrowLeft, 
+  Check, 
+  Plus, 
+  Trash2, 
+  BookOpen, 
+  Briefcase, 
+  Award, 
+  Certificate, 
+  FileText,
+  User,
+  MapPin,
+  Phone,
+  CloudUpload
+} from "lucide-react";
+import { supabase } from "@/lib/supabase";
+import Link from "next/link";
+
+type Education = {
+  institution: string;
+  degree: string;
+  start_date: string;
+  end_date: string;
+  description: string;
+};
+
+type Experience = {
+  company: string;
+  position: string;
+  start_date: string;
+  end_date: string;
+  description: string;
+};
+
+type Skill = string;
+
+type Cert = {
+  name: string;
+  issuer: string;
+  id: string;
+  date: string;
+};
+
+type Achievement = {
+  title: string;
+  issuer: string;
+  description: string;
+  date: string;
+};
+
+export default function OnboardingPage() {
+  const [step, setStep] = useState(1);
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  // Form State
+  const [personal, setPersonal] = useState({
+    fullName: "",
+    phone: "",
+    location: ""
+  });
+  const [education, setEducation] = useState<Education[]>([]);
+  const [experience, setExperience] = useState<Experience[]>([]);
+  const [skills, setSkills] = useState<Skill[]>([]);
+  const [certs, setCerts] = useState<Cert[]>([]);
+  const [achievements, setAchievements] = useState<Achievement[]>([]);
+  const [resume, setResume] = useState<File | null>(null);
+
+  // Modal States
+  const [isCertModalOpen, setIsCertModalOpen] = useState(false);
+  const [isAchievementModalOpen, setIsAchievementModalOpen] = useState(false);
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+      setLoading(false);
+    };
+    checkUser();
+  }, []);
+
+  const nextStep = () => setStep(s => Math.min(s + 1, 6));
+  const prevStep = () => setStep(s => Math.max(s - 1, 1));
+
+  const progress = (step / 6) * 100;
+
+  const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
+  const [authError, setAuthError] = useState<string | null>(null);
+
+  if (loading) return (
+    <div className="min-h-screen bg-[#061a12] flex items-center justify-center">
+      <div className="w-12 h-12 border-4 border-[#c1ff72] border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-[#061a12] flex flex-col items-center justify-center px-6">
+        <div className="max-w-md w-full glass p-8 md:p-12 rounded-[40px] text-center border-white/5">
+          <img src="/logo.svg" alt="Pathway Logo" className="h-10 mx-auto mb-8" />
+          <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">Welcome to the Exodus.</h1>
+          <p className="text-white/40 mb-8 font-jakarta text-sm">Join the 10,000+ students navigating their global future.</p>
+          
+          <div className="space-y-4">
+            {/* Social Auth */}
+            <div className="grid grid-cols-2 gap-4">
+              <button 
+                onClick={() => supabase.auth.signInWithOAuth({ provider: 'google' })}
+                className="bg-white/5 border border-white/10 text-white p-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-white/10 transition-all text-xs uppercase tracking-widest"
+              >
+                <img src="https://www.google.com/favicon.ico" className="w-4 h-4" alt="Google" />
+                Google
+              </button>
+              <button 
+                onClick={() => supabase.auth.signInWithOAuth({ provider: 'apple' })}
+                className="bg-white text-black p-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-white/90 transition-all text-xs uppercase tracking-widest"
+              >
+                <img src="https://www.apple.com/favicon.ico" className="w-4 h-4 invert" alt="Apple" />
+                Apple
+              </button>
+            </div>
+
+            <div className="flex items-center gap-4 my-6">
+              <div className="h-[1px] flex-1 bg-white/5" />
+              <span className="text-[10px] font-bold text-white/10 uppercase tracking-widest">or email</span>
+              <div className="h-[1px] flex-1 bg-white/5" />
+            </div>
+
+            {/* Email/Pass Auth */}
+            <form className="space-y-4 text-left" onSubmit={async (e) => {
+              e.preventDefault();
+              setAuthError(null);
+              const formData = new FormData(e.currentTarget);
+              const email = formData.get('email') as string;
+              const password = formData.get('password') as string;
+              
+              if (authMode === 'signin') {
+                const { error } = await supabase.auth.signInWithPassword({ email, password });
+                if (error) setAuthError(error.message);
+              } else {
+                const { error } = await supabase.auth.signUp({ email, password });
+                if (error) setAuthError(error.message);
+                else alert("Check your email for confirmation!");
+              }
+            }}>
+              <div className="flex bg-white/5 p-1 rounded-xl mb-4">
+                <button 
+                  type="button"
+                  onClick={() => setAuthMode('signin')}
+                  className={`flex-1 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all ${authMode === 'signin' ? 'bg-[#c1ff72] text-[#061a12]' : 'text-white/40'}`}
+                >
+                  Sign In
+                </button>
+                <button 
+                  type="button"
+                  onClick={() => setAuthMode('signup')}
+                  className={`flex-1 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all ${authMode === 'signup' ? 'bg-[#c1ff72] text-[#061a12]' : 'text-white/40'}`}
+                >
+                  Sign Up
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                <input 
+                  name="email"
+                  type="email" 
+                  placeholder="Email Address" 
+                  className="w-full bg-white/5 border border-white/5 p-4 rounded-xl text-white outline-none focus:bg-white/10 transition-all font-jakarta text-sm"
+                  required
+                />
+                <input 
+                  name="password"
+                  type="password" 
+                  placeholder="Password" 
+                  className="w-full bg-white/5 border border-white/5 p-4 rounded-xl text-white outline-none focus:bg-white/10 transition-all font-jakarta text-sm"
+                  required
+                />
+              </div>
+
+              {authError && <p className="text-red-400 text-[10px] font-bold uppercase tracking-widest mt-2">{authError}</p>}
+
+              <button className="w-full bg-[#c1ff72] text-[#061a12] py-4 rounded-xl font-bold uppercase tracking-widest text-xs hover:scale-[1.02] active:scale-95 transition-all">
+                {authMode === 'signin' ? 'Sign In' : 'Create Account'}
+              </button>
+            </form>
+          </div>
+
+          <p className="mt-8 text-[10px] text-white/20 uppercase tracking-widest font-bold">Secure Institutional Auth</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-[#061a12] text-white font-outfit overflow-x-hidden">
+      {/* Navigation Header */}
+      <header className="fixed top-0 left-0 w-full z-50 bg-[#061a12]/80 backdrop-blur-xl border-b border-white/5 px-6 py-4">
+        <div className="max-w-5xl mx-auto flex items-center justify-between">
+          <Link href="/">
+            <img src="/logo.svg" alt="Pathway Logo" className="h-8" />
+          </Link>
+          <div className="flex-1 max-w-md mx-10">
+            <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+              <motion.div 
+                initial={{ width: 0 }}
+                animate={{ width: `${progress}%` }}
+                className="h-full bg-[#c1ff72]"
+              />
+            </div>
+            <p className="text-[10px] font-bold text-[#c1ff72] uppercase tracking-widest mt-2">Step {step} of 6 — {Math.round(progress)}% Complete</p>
+          </div>
+          <button onClick={() => supabase.auth.signOut()} className="text-[10px] font-bold text-white/20 hover:text-white transition-colors uppercase tracking-widest">Sign Out</button>
+        </div>
+      </header>
+
+      <main className="pt-32 pb-40 px-6">
+        <div className="max-w-3xl mx-auto">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={step}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              {step === 1 && <StepPersonal data={personal} setData={setPersonal} onNext={nextStep} />}
+              {step === 2 && <StepAcademicExperience 
+                edu={education} setEdu={setEducation} 
+                exp={experience} setExp={setExperience} 
+                onNext={nextStep} onPrev={prevStep} 
+              />}
+              {step === 3 && <StepSkills skills={skills} setSkills={setSkills} onNext={nextStep} onPrev={prevStep} />}
+              {step === 4 && <StepCertificates certs={certs} setCerts={setCerts} onNext={nextStep} onPrev={prevStep} />}
+              {step === 5 && <StepAchievements achievements={achievements} setAchievements={setAchievements} onNext={nextStep} onPrev={prevStep} />}
+              {step === 6 && <StepResume resume={resume} setResume={setResume} onSubmit={() => {}} onPrev={prevStep} />}
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </main>
+
+      {/* Navigation Controls */}
+      <footer className="fixed bottom-0 left-0 w-full p-6 bg-gradient-to-t from-[#061a12] via-[#061a12] to-transparent z-40">
+        <div className="max-w-3xl mx-auto flex justify-between items-center gap-6">
+          {step > 1 && (
+            <button 
+              onClick={prevStep}
+              className="flex items-center gap-2 px-8 py-4 rounded-2xl border border-white/10 text-white/60 font-bold hover:text-white hover:border-white/20 transition-all uppercase tracking-widest text-xs"
+            >
+              <ArrowLeft className="w-4 h-4" /> Back
+            </button>
+          )}
+          <div className="flex-1" />
+          {step < 6 ? (
+            <button 
+              onClick={nextStep}
+              className="bg-[#c1ff72] text-[#061a12] px-10 py-4 rounded-2xl font-bold flex items-center gap-3 hover:scale-105 active:scale-95 transition-all shadow-[0_20px_40px_rgba(193,255,114,0.2)] uppercase tracking-widest text-xs"
+            >
+              Continue <ArrowRight className="w-4 h-4" />
+            </button>
+          ) : (
+            <button 
+              onClick={() => {}}
+              className="bg-[#ffe44d] text-[#061a12] px-12 py-4 rounded-2xl font-bold flex items-center gap-3 hover:scale-105 active:scale-95 transition-all shadow-[0_20px_40px_rgba(255,228,77,0.2)] uppercase tracking-widest text-xs"
+            >
+              Complete Profile <Check className="w-4 h-4" />
+            </button>
+          )}
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+// STEP COMPONENTS (Placeholders for now, will implement details next)
+
+function StepPersonal({ data, setData, onNext }: any) {
+  return (
+    <div className="space-y-10">
+      <div className="text-center md:text-left">
+        <span className="bg-[#c1ff72]/10 text-[#c1ff72] px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4 inline-block border border-[#c1ff72]/20">Identification</span>
+        <h2 className="text-4xl md:text-6xl font-bold tracking-tight">Tell us who <br /> you are.</h2>
+      </div>
+
+      <div className="grid gap-6">
+        <div className="space-y-2">
+          <label className="text-[10px] font-bold text-white/20 uppercase tracking-[0.2em] ml-4">Full Legal Name</label>
+          <div className="relative group">
+            <User className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-white/20 group-focus-within:text-[#c1ff72] transition-colors" />
+            <input 
+              type="text"
+              value={data.fullName}
+              onChange={e => setData({...data, fullName: e.target.value})}
+              placeholder="e.g. Ahmed Raza"
+              className="w-full bg-white/5 border border-white/5 p-6 pl-16 rounded-3xl text-white placeholder:text-white/10 focus:bg-white/10 focus:border-[#c1ff72]/30 outline-none transition-all font-jakarta"
+            />
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold text-white/20 uppercase tracking-[0.2em] ml-4">Phone Number</label>
+            <div className="relative group">
+              <Phone className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-white/20 group-focus-within:text-[#c1ff72] transition-colors" />
+              <input 
+                type="tel"
+                value={data.phone}
+                onChange={e => setData({...data, phone: e.target.value})}
+                placeholder="+92 3XX XXXXXXX"
+                className="w-full bg-white/5 border border-white/5 p-6 pl-16 rounded-3xl text-white placeholder:text-white/10 focus:bg-white/10 focus:border-[#c1ff72]/30 outline-none transition-all font-jakarta"
+              />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold text-white/20 uppercase tracking-[0.2em] ml-4">Current City</label>
+            <div className="relative group">
+              <MapPin className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-white/20 group-focus-within:text-[#c1ff72] transition-colors" />
+              <input 
+                type="text"
+                value={data.location}
+                onChange={e => setData({...data, location: e.target.value})}
+                placeholder="Lahore, Pakistan"
+                className="w-full bg-white/5 border border-white/5 p-6 pl-16 rounded-3xl text-white placeholder:text-white/10 focus:bg-white/10 focus:border-[#c1ff72]/30 outline-none transition-all font-jakarta"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function StepAcademicExperience({ edu, setEdu, exp, setExp }: any) {
+  return (
+    <div className="space-y-16">
+      {/* Education Section */}
+      <section>
+        <div className="flex items-center justify-between mb-10">
+          <div>
+            <span className="text-[#c1ff72] text-[10px] font-bold uppercase tracking-widest mb-2 block">Foundations</span>
+            <h2 className="text-3xl font-bold">Academic Background</h2>
+          </div>
+          <button 
+            onClick={() => setEdu([...edu, { institution: "", degree: "", start_date: "", end_date: "", description: "" }])}
+            className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-[#c1ff72]/10 border border-[#c1ff72]/20 text-[#c1ff72] font-bold text-xs uppercase tracking-widest hover:bg-[#c1ff72]/20 transition-all"
+          >
+            <Plus className="w-4 h-4" /> Add Education
+          </button>
+        </div>
+
+        <div className="space-y-6">
+          {edu.length === 0 && (
+            <div className="p-12 rounded-[40px] border-2 border-dashed border-white/5 text-center text-white/20 font-jakarta italic">
+              No education added yet.
+            </div>
+          )}
+          {edu.map((item: any, i: number) => (
+            <div key={i} className="glass p-8 rounded-[40px] border-white/5 relative group">
+              <button 
+                onClick={() => setEdu(edu.filter((_: any, index: number) => index !== i))}
+                className="absolute top-8 right-8 text-white/10 hover:text-red-500 transition-colors"
+              >
+                <Trash2 className="w-5 h-5" />
+              </button>
+              <div className="grid gap-6">
+                <input 
+                  placeholder="Institution (e.g. LUMS)" 
+                  className="bg-transparent text-xl font-bold border-none outline-none placeholder:text-white/10"
+                  value={item.institution}
+                  onChange={e => {
+                    const next = [...edu];
+                    next[i].institution = e.target.value;
+                    setEdu(next);
+                  }}
+                />
+                <input 
+                  placeholder="Degree (e.g. B.Sc Computer Science)" 
+                  className="bg-transparent text-white/60 border-none outline-none placeholder:text-white/5"
+                  value={item.degree}
+                  onChange={e => {
+                    const next = [...edu];
+                    next[i].degree = e.target.value;
+                    setEdu(next);
+                  }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Experience Section */}
+      <section>
+        <div className="flex items-center justify-between mb-10">
+          <div>
+            <span className="text-[#ffe44d] text-[10px] font-bold uppercase tracking-widest mb-2 block">Career Journey</span>
+            <h2 className="text-3xl font-bold">Work Experience</h2>
+          </div>
+          <button 
+            onClick={() => setExp([...exp, { company: "", position: "", start_date: "", end_date: "", description: "" }])}
+            className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-[#ffe44d]/10 border border-[#ffe44d]/20 text-[#ffe44d] font-bold text-xs uppercase tracking-widest hover:bg-[#ffe44d]/20 transition-all"
+          >
+            <Plus className="w-4 h-4" /> Add Career
+          </button>
+        </div>
+
+        <div className="space-y-6">
+          {exp.length === 0 && (
+            <div className="p-12 rounded-[40px] border-2 border-dashed border-white/5 text-center text-white/20 font-jakarta italic">
+              No professional experience added yet.
+            </div>
+          )}
+          {exp.map((item: any, i: number) => (
+            <div key={i} className="glass p-8 rounded-[40px] border-white/5 relative group">
+              <button 
+                onClick={() => setExp(exp.filter((_: any, index: number) => index !== i))}
+                className="absolute top-8 right-8 text-white/10 hover:text-red-500 transition-colors"
+              >
+                <Trash2 className="w-5 h-5" />
+              </button>
+              <div className="grid gap-6">
+                <input 
+                  placeholder="Company (e.g. Systems Ltd)" 
+                  className="bg-transparent text-xl font-bold border-none outline-none placeholder:text-white/10"
+                  value={item.company}
+                  onChange={e => {
+                    const next = [...exp];
+                    next[i].company = e.target.value;
+                    setExp(next);
+                  }}
+                />
+                <input 
+                  placeholder="Position (e.g. Software Engineer Intern)" 
+                  className="bg-transparent text-white/60 border-none outline-none placeholder:text-white/5"
+                  value={item.position}
+                  onChange={e => {
+                    const next = [...exp];
+                    next[i].position = e.target.value;
+                    setExp(next);
+                  }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function StepSkills({ skills, setSkills }: any) {
+  const [input, setInput] = useState("");
+  const quickSkills = ["Python", "Machine Learning", "Strategic Planning", "Data Analysis", "React.js", "Financial Modeling"];
+
+  const addSkill = (skill: string) => {
+    if (skill && !skills.includes(skill)) {
+      setSkills([...skills, skill]);
+      setInput("");
+    }
+  };
+
+  return (
+    <div className="space-y-10">
+      <div className="text-center md:text-left">
+        <span className="bg-[#c1ff72]/10 text-[#c1ff72] px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4 inline-block border border-[#c1ff72]/20">Competencies</span>
+        <h2 className="text-4xl md:text-6xl font-bold tracking-tight">Your Skills.</h2>
+      </div>
+
+      <div className="space-y-8">
+        <div className="flex gap-4">
+          <input 
+            type="text"
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            onKeyPress={e => e.key === 'Enter' && addSkill(input)}
+            placeholder="Search or add skills..."
+            className="flex-1 bg-white/5 border border-white/5 p-6 rounded-3xl text-white outline-none focus:bg-white/10 transition-all font-jakarta"
+          />
+          <button 
+            onClick={() => addSkill(input)}
+            className="bg-[#c1ff72] text-[#061a12] px-8 rounded-3xl font-bold flex items-center justify-center hover:scale-105 transition-all"
+          >
+            <Plus className="w-6 h-6" />
+          </button>
+        </div>
+
+        <div>
+          <p className="text-[10px] font-bold text-white/20 uppercase tracking-widest mb-4 ml-4">Quick Add</p>
+          <div className="flex flex-wrap gap-3">
+            {quickSkills.map(s => (
+              <button 
+                key={s}
+                onClick={() => addSkill(s)}
+                className="px-6 py-3 rounded-2xl bg-white/5 border border-white/5 text-sm font-bold hover:bg-[#c1ff72] hover:text-[#061a12] hover:border-[#c1ff72] transition-all"
+              >
+                {s}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="pt-10 border-t border-white/5">
+          <div className="flex flex-wrap gap-4">
+            {skills.map((s: string) => (
+              <div key={s} className="flex items-center gap-3 px-6 py-3 rounded-2xl bg-[#c1ff72] text-[#061a12] font-bold text-sm">
+                {s}
+                <button onClick={() => setSkills(skills.filter((skill: string) => skill !== s))}>
+                  <Trash2 className="w-4 h-4 opacity-50 hover:opacity-100 transition-opacity" />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function StepCertificates({ certs, setCerts }: any) {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [newCert, setNewCert] = useState({ name: "", issuer: "", id: "", date: "" });
+
+  const addCert = () => {
+    if (newCert.name && newCert.issuer) {
+      setCerts([...certs, newCert]);
+      setNewCert({ name: "", issuer: "", id: "", date: "" });
+      setModalOpen(false);
+    }
+  };
+
+  return (
+    <div className="space-y-10">
+      <div className="flex items-center justify-between">
+        <div>
+          <span className="bg-[#c1ff72]/10 text-[#c1ff72] px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4 inline-block border border-[#c1ff72]/20">Verification</span>
+          <h2 className="text-4xl md:text-5xl font-bold tracking-tight">Certificates.</h2>
+        </div>
+        <button 
+          onClick={() => setModalOpen(true)}
+          className="bg-[#c1ff72] text-[#061a12] px-8 py-4 rounded-2xl font-bold text-xs uppercase tracking-widest flex items-center gap-2"
+        >
+          <Plus className="w-4 h-4" /> Add New
+        </button>
+      </div>
+
+      <div className="grid gap-6">
+        {certs.map((c: any, i: number) => (
+          <div key={i} className="glass p-8 rounded-[40px] border-white/5 flex items-center justify-between">
+            <div className="flex items-center gap-6">
+              <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center">
+                <Certificate className="w-6 h-6 text-[#c1ff72]" />
+              </div>
+              <div>
+                <h4 className="text-xl font-bold">{c.name}</h4>
+                <p className="text-white/40 text-sm">{c.issuer} • {c.id}</p>
+              </div>
+            </div>
+            <button onClick={() => setCerts(certs.filter((_: any, idx: number) => idx !== i))}>
+              <Trash2 className="w-5 h-5 text-white/10 hover:text-red-500 transition-colors" />
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {modalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
+          <div className="absolute inset-0 bg-[#061a12]/90 backdrop-blur-md" onClick={() => setModalOpen(false)} />
+          <motion.div 
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="relative w-full max-w-lg glass p-10 rounded-[50px] border-white/10 shadow-2xl"
+          >
+            <h3 className="text-2xl font-bold mb-8">Add Certificate</h3>
+            <div className="space-y-6">
+              <input 
+                placeholder="Certificate Name"
+                className="w-full bg-white/5 border border-white/5 p-6 rounded-2xl outline-none focus:bg-white/10 transition-all font-jakarta"
+                value={newCert.name}
+                onChange={e => setNewCert({...newCert, name: e.target.value})}
+              />
+              <input 
+                placeholder="Issuer"
+                className="w-full bg-white/5 border border-white/5 p-6 rounded-2xl outline-none focus:bg-white/10 transition-all font-jakarta"
+                value={newCert.issuer}
+                onChange={e => setNewCert({...newCert, issuer: e.target.value})}
+              />
+              <input 
+                placeholder="Certificate ID"
+                className="w-full bg-white/5 border border-white/5 p-6 rounded-2xl outline-none focus:bg-white/10 transition-all font-jakarta"
+                value={newCert.id}
+                onChange={e => setNewCert({...newCert, id: e.target.value})}
+              />
+              <button 
+                onClick={addCert}
+                className="w-full bg-[#c1ff72] text-[#061a12] py-4 rounded-2xl font-bold uppercase tracking-widest text-sm"
+              >
+                Save Certificate
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function StepAchievements({ achievements, setAchievements }: any) {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [newAch, setNewAch] = useState({ title: "", issuer: "", description: "", date: "" });
+
+  const addAch = () => {
+    if (newAch.title) {
+      setAchievements([...achievements, newAch]);
+      setNewAch({ title: "", issuer: "", description: "", date: "" });
+      setModalOpen(false);
+    }
+  };
+
+  return (
+    <div className="space-y-10">
+      <div className="flex items-center justify-between">
+        <div>
+          <span className="bg-[#ffe44d]/10 text-[#ffe44d] px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4 inline-block border border-[#ffe44d]/20">Legacy</span>
+          <h2 className="text-4xl md:text-5xl font-bold tracking-tight">Achievements.</h2>
+        </div>
+        <button 
+          onClick={() => setModalOpen(true)}
+          className="bg-[#ffe44d] text-[#061a12] px-8 py-4 rounded-2xl font-bold text-xs uppercase tracking-widest flex items-center gap-2"
+        >
+          <Plus className="w-4 h-4" /> Add Recognition
+        </button>
+      </div>
+
+      <div className="grid gap-6">
+        {achievements.map((a: any, i: number) => (
+          <div key={i} className="glass p-8 rounded-[40px] border-white/5 flex items-center justify-between">
+            <div className="flex items-center gap-6">
+              <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center">
+                <Award className="w-6 h-6 text-[#ffe44d]" />
+              </div>
+              <div>
+                <h4 className="text-xl font-bold">{a.title}</h4>
+                <p className="text-white/40 text-sm">{a.issuer}</p>
+              </div>
+            </div>
+            <button onClick={() => setAchievements(achievements.filter((_: any, idx: number) => idx !== i))}>
+              <Trash2 className="w-5 h-5 text-white/10 hover:text-red-500 transition-colors" />
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {modalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
+          <div className="absolute inset-0 bg-[#061a12]/90 backdrop-blur-md" onClick={() => setModalOpen(false)} />
+          <motion.div 
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="relative w-full max-w-lg glass p-10 rounded-[50px] border-white/10 shadow-2xl"
+          >
+            <h3 className="text-2xl font-bold mb-8">Add Achievement</h3>
+            <div className="space-y-6">
+              <input 
+                placeholder="Title (e.g. Dean's List)"
+                className="w-full bg-white/5 border border-white/5 p-6 rounded-2xl outline-none focus:bg-white/10 transition-all font-jakarta"
+                value={newAch.title}
+                onChange={e => setNewAch({...newAch, title: e.target.value})}
+              />
+              <input 
+                placeholder="Issuer"
+                className="w-full bg-white/5 border border-white/5 p-6 rounded-2xl outline-none focus:bg-white/10 transition-all font-jakarta"
+                value={newAch.issuer}
+                onChange={e => setNewAch({...newAch, issuer: e.target.value})}
+              />
+              <textarea 
+                placeholder="Description"
+                className="w-full bg-white/5 border border-white/5 p-6 rounded-2xl outline-none focus:bg-white/10 transition-all font-jakarta h-32 resize-none"
+                value={newAch.description}
+                onChange={e => setNewAch({...newAch, description: e.target.value})}
+              />
+              <button 
+                onClick={addAch}
+                className="w-full bg-[#ffe44d] text-[#061a12] py-4 rounded-2xl font-bold uppercase tracking-widest text-sm"
+              >
+                Save Recognition
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function StepResume({ resume, setResume, onSubmit }: any) {
+  return (
+    <div className="space-y-10">
+      <div className="text-center md:text-left">
+        <span className="bg-[#c1ff72]/10 text-[#c1ff72] px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4 inline-block border border-[#c1ff72]/20">Documentation</span>
+        <h2 className="text-4xl md:text-6xl font-bold tracking-tight">Final Step.</h2>
+      </div>
+
+      <div className="relative">
+        <input 
+          type="file" 
+          id="resume"
+          className="hidden"
+          onChange={e => setResume(e.target.files?.[0] || null)}
+          accept=".pdf,.doc,.docx"
+        />
+        <label 
+          htmlFor="resume"
+          className="block p-20 rounded-[60px] border-2 border-dashed border-white/10 hover:border-[#c1ff72]/50 hover:bg-[#c1ff72]/5 transition-all cursor-pointer text-center group"
+        >
+          <div className="w-20 h-20 rounded-3xl bg-[#c1ff72]/10 flex items-center justify-center mx-auto mb-8 group-hover:scale-110 transition-transform">
+            <CloudUpload className="w-10 h-10 text-[#c1ff72]" />
+          </div>
+          <h3 className="text-2xl font-bold mb-4">{resume ? resume.name : "Upload your Resume"}</h3>
+          <p className="text-white/30 text-sm font-jakarta">Support for PDF, DOCX (Max 5MB)</p>
+        </label>
+      </div>
+
+      <div className="p-8 rounded-3xl bg-white/5 border border-white/5 flex items-start gap-6">
+        <div className="w-10 h-10 rounded-full bg-[#c1ff72]/20 flex items-center justify-center shrink-0">
+          <FileText className="w-5 h-5 text-[#c1ff72]" />
+        </div>
+        <p className="text-white/40 text-sm leading-relaxed font-jakarta">
+          Your resume will be parsed by our RAG engine to automatically refine your career alignment and SOP strategies.
+        </p>
+      </div>
+    </div>
+  );
+}
