@@ -559,10 +559,10 @@ export default function LandingPage() {
             <div>
               <h4 className="text-white font-bold uppercase text-[10px] tracking-[0.3em] mb-8">Resources</h4>
               <ul className="space-y-4 text-white/40 font-bold text-sm">
-                <li><Link href="#" className="hover:text-[#c1ff72] transition-colors">SOP Architect</Link></li>
-                <li><Link href="#" className="hover:text-[#c1ff72] transition-colors">Visa Compliance</Link></li>
-                <li><Link href="#" className="hover:text-[#c1ff72] transition-colors">Student Loans</Link></li>
-                <li><Link href="#" className="hover:text-[#c1ff72] transition-colors">Success Stories</Link></li>
+                <li><Link href="/resources/sop-architect" className="hover:text-[#c1ff72] transition-colors">SOP Architect</Link></li>
+                <li><Link href="/resources/visa-compliance" className="hover:text-[#c1ff72] transition-colors">Visa Compliance</Link></li>
+                <li><Link href="/resources/student-loans" className="hover:text-[#c1ff72] transition-colors">Student Loans</Link></li>
+                <li><Link href="/resources/success-stories" className="hover:text-[#c1ff72] transition-colors">Success Stories</Link></li>
               </ul>
             </div>
             <div>
