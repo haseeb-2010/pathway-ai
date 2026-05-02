@@ -25,6 +25,7 @@ export default function DashboardLayout({
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [userName, setUserName] = useState("Student User");
+  const [unreadCount, setUnreadCount] = useState(0);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -39,10 +40,19 @@ export default function DashboardLayout({
         if (profile?.full_name) {
           setUserName(profile.full_name);
         }
+
+        // Fetch unread notifications
+        const { count } = await supabase
+          .from('notifications')
+          .select('*', { count: 'exact', head: true })
+          .eq('profile_id', user.id)
+          .eq('is_read', false);
+        
+        setUnreadCount(count || 0);
       }
     };
     fetchProfile();
-  }, []);
+  }, [pathname]);
 
   const navItems = [
     { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
@@ -69,10 +79,12 @@ export default function DashboardLayout({
 
         <div className="flex items-center gap-4 md:gap-8">
           <div className="flex items-center gap-3 md:gap-6">
-            <button className="relative p-2 text-white/40 hover:text-[#c1ff72] transition-colors">
+            <Link href="/dashboard/notifications" className="relative p-2 text-white/40 hover:text-[#c1ff72] transition-colors">
               <Bell className="w-5 h-5 md:w-6 md:h-6" />
-              <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-[#061a12]" />
-            </button>
+              {unreadCount > 0 && (
+                <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-[#061a12]" />
+              )}
+            </Link>
             <div className="flex items-center gap-3 pl-3 md:pl-6 border-l border-white/5">
               <div className="hidden md:block text-right">
                 <p className="text-xs font-bold text-white">{userName}</p>
