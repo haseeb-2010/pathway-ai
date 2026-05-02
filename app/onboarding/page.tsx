@@ -139,8 +139,19 @@ export default function OnboardingPage() {
         if (eduData) setEducation(eduData as any);
         if (expData) setExperience(expData as any);
         if (skillsData) setSkills(skillsData.map(s => s.name));
-        if (certsData) setCerts(certsData.map(c => ({ name: c.name, issuer: c.issuer, id: c.certificate_id, date: "" })));
-        if (achData) setAchievements(achData as any);
+        if (certsData) setCerts(certsData.map(c => ({ 
+          name: c.name, 
+          issuer: c.issuer, 
+          id: c.certificate_id, 
+          date: c.issue_date || "" 
+        })));
+        if (achData) setAchievements(achData.map(a => ({
+          title: a.title,
+          issuer: a.issuer,
+          description: a.description,
+          date: a.award_date || ""
+        })));
+        if (profile.resume_url) setResume({ name: "Resume uploaded" } as any);
       } catch (err) {
         console.error("Error fetching profile data:", err);
       } finally {
@@ -186,15 +197,27 @@ export default function OnboardingPage() {
           updated_at: new Date().toISOString()
         });
       } else if (targetStep === 2) {
-        // Simple strategy: Clear and re-insert for education/experience/skills
-        // This is safer for partial updates during onboarding
         await supabase.from('education').delete().eq('profile_id', user.id);
         if (education.length > 0) {
-          await supabase.from('education').insert(education.map(e => ({ ...e, profile_id: user.id })));
+          await supabase.from('education').insert(education.map(e => ({ 
+            profile_id: user.id,
+            institution: e.institution,
+            degree: e.degree,
+            start_date: e.start_date || null,
+            end_date: e.end_date || null,
+            description: e.description || ""
+          })));
         }
         await supabase.from('experience').delete().eq('profile_id', user.id);
         if (experience.length > 0) {
-          await supabase.from('experience').insert(experience.map(e => ({ ...e, profile_id: user.id })));
+          await supabase.from('experience').insert(experience.map(e => ({ 
+            profile_id: user.id,
+            company: e.company,
+            position: e.position,
+            start_date: e.start_date || null,
+            end_date: e.end_date || null,
+            description: e.description || ""
+          })));
         }
       } else if (targetStep === 3) {
         await supabase.from('skills').delete().eq('profile_id', user.id);
@@ -208,19 +231,26 @@ export default function OnboardingPage() {
             profile_id: user.id, 
             name: c.name, 
             issuer: c.issuer, 
-            certificate_id: c.id 
+            certificate_id: c.id,
+            issue_date: c.date || null
           })));
         }
       } else if (targetStep === 5) {
         await supabase.from('achievements').delete().eq('profile_id', user.id);
         if (achievements.length > 0) {
-          await supabase.from('achievements').insert(achievements.map(a => ({ ...a, profile_id: user.id })));
+          await supabase.from('achievements').insert(achievements.map(a => ({ 
+            profile_id: user.id,
+            title: a.title,
+            issuer: a.issuer,
+            description: a.description,
+            award_date: a.date || null
+          })));
         }
       }
 
       // Always update the current step in profiles
       await supabase.from('profiles').update({ 
-        current_step: Math.min(targetStep + 1, 6),
+        current_step: targetStep,
         updated_at: new Date().toISOString()
       }).eq('id', user.id);
     } catch (error) {
@@ -262,13 +292,24 @@ export default function OnboardingPage() {
     setLoading(true);
 
     try {
-      await saveCurrentStepData(step);
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .update({ onboarding_completed: true })
-        .eq('id', user.id);
+      // Save current step (step 6)
+      if (resume) {
+        // In a real app, we'd upload to Supabase Storage here
+        // For now, we save the filename to the profile
+        await supabase.from('profiles').update({ 
+          resume_url: resume.name,
+          onboarding_completed: true,
+          current_step: 6,
+          updated_at: new Date().toISOString()
+        }).eq('id', user.id);
+      } else {
+        await supabase.from('profiles').update({ 
+          onboarding_completed: true,
+          current_step: 6,
+          updated_at: new Date().toISOString()
+        }).eq('id', user.id);
+      }
       
-      if (profileError) throw profileError;
       router.push('/dashboard');
     } catch (error: any) {
       console.error("Error completing onboarding:", error);
