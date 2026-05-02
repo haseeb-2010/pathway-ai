@@ -580,7 +580,7 @@ export default function LandingPage() {
                 <li><Link href="#" className="hover:text-[#c1ff72] transition-colors">LinkedIn</Link></li>
                 <li><Link href="#" className="hover:text-[#c1ff72] transition-colors">Twitter</Link></li>
                 <li><Link href="#" className="hover:text-[#c1ff72] transition-colors">Instagram</Link></li>
-                <li><Link href="#" className="hover:text-[#c1ff72] transition-colors">Support</Link></li>
+                <li><Link href="/support" className="hover:text-[#c1ff72] transition-colors">Support</Link></li>
               </ul>
             </div>
           </div>
