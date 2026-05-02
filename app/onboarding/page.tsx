@@ -366,7 +366,16 @@ export default function OnboardingPage() {
                   }
                 }
               } else if (authMode === 'signup') {
-                const { error } = await supabase.auth.signUp({ email, password });
+                const fullName = formData.get('fullName') as string;
+                const { error } = await supabase.auth.signUp({ 
+                  email, 
+                  password,
+                  options: {
+                    data: {
+                      full_name: fullName
+                    }
+                  }
+                });
                 if (error) setAuthError(error.message);
                 else alert("Check your email for confirmation!");
               } else if (authMode === 'forgot') {
@@ -403,6 +412,15 @@ export default function OnboardingPage() {
               )}
 
               <div className="space-y-4">
+                {authMode === 'signup' && (
+                  <input 
+                    name="fullName"
+                    type="text" 
+                    placeholder="Full Name" 
+                    className="w-full bg-white/5 border border-white/5 p-4 rounded-xl text-white outline-none focus:bg-white/10 transition-all font-jakarta text-sm"
+                    required
+                  />
+                )}
                 <input 
                   name="email"
                   type="email" 
