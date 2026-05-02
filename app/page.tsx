@@ -34,10 +34,10 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen relative">
       {/* Navigation - Capsule Style */}
-      <div className="fixed top-8 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-5xl">
-        <nav className="glass px-8 py-3 flex items-center justify-between rounded-full border border-white/10 shadow-[0_32px_64px_rgba(0,0,0,0.5)]">
+      <div className="fixed top-4 md:top-8 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-5xl">
+        <nav className="glass px-4 md:px-8 py-2 md:py-3 flex items-center justify-between rounded-full border border-white/10 shadow-[0_32px_64px_rgba(0,0,0,0.5)]">
           <div className="flex items-center">
-            <img src="/logo.svg" alt="Pathway Logo" className="h-7 md:h-8 w-auto object-contain" />
+            <img src="/logo.svg" alt="Pathway Logo" className="h-6 md:h-8 w-auto object-contain" />
           </div>
           <div className="hidden md:flex items-center gap-10 text-[11px] font-bold text-white/50 uppercase tracking-[0.25em] font-jakarta">
             <Link href="#matching" className="hover:text-[#c1ff72] transition-colors">Education</Link>
@@ -47,20 +47,20 @@ export default function LandingPage() {
           </div>
           <Link 
             href="/onboarding"
-            className="bg-[#c1ff72] hover:bg-[#c1ff72]/90 text-[#061a12] px-6 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center gap-2 uppercase tracking-widest active:scale-95"
+            className="bg-[#c1ff72] hover:bg-[#c1ff72]/90 text-[#061a12] px-4 md:px-6 py-2 md:py-2.5 rounded-xl font-bold text-[10px] md:text-xs transition-all flex items-center gap-2 uppercase tracking-widest active:scale-95"
           >
-            Get Started <ArrowRight className="w-4 h-4" />
+            Get Started <ArrowRight className="w-3 h-3 md:w-4 md:h-4" />
           </Link>
         </nav>
       </div>
 
       <main className="pt-20">
         {/* HERO SECTION: AI Student Copilot */}
-        <section id="matching" className="py-10 md:py-16 px-6">
+        <section id="matching" className="py-12 md:py-16 px-6">
           <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 md:gap-24 items-center">
             <div className="text-center lg:text-left">
               <span className="section-label mx-auto lg:mx-0">AI Student Copilot</span>
-              <h1 className="text-4xl md:text-8xl font-bold tracking-tight leading-[0.9] text-white mb-8">
+              <h1 className="text-4xl md:text-8xl font-bold tracking-tight leading-[1.1] md:leading-[0.9] text-white mb-6 md:mb-8">
                 Bypass the consultant. <br className="hidden md:block" />
                 Land your dream uni.
               </h1>
@@ -117,7 +117,7 @@ export default function LandingPage() {
         </section>
 
         {/* SECTION: Internship Module */}
-        <section id="internships" className="py-20 md:py-32 px-6 bg-[#c1ff72]/[0.02] border-y border-[#c1ff72]/5">
+        <section id="internships" className="py-16 md:py-32 px-6 bg-[#c1ff72]/[0.02] border-y border-[#c1ff72]/5">
           <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 md:gap-24 items-center">
              <div className="text-center lg:text-left">
               <span className="section-label mx-auto lg:mx-0">Global Career Placement</span>
@@ -172,7 +172,7 @@ export default function LandingPage() {
         </section>
 
         {/* SECTION 3: Financial Aid */}
-        <section id="funding" className="py-20 md:py-32 px-6 border-b border-white/5">
+        <section id="funding" className="py-16 md:py-32 px-6 border-b border-white/5">
           <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 md:gap-24 items-center">
             <div className="order-2 lg:order-1 relative h-[450px] md:h-[500px] w-full flex items-center justify-center lg:justify-start scale-[0.85] md:scale-100">
               <div className="yellow-card w-[240px] h-[300px] md:w-[280px] md:h-[340px] absolute left-0 lg:-left-12 z-0 p-8 md:p-10 shadow-[0_40px_80px_rgba(0,0,0,0.5)] transform -rotate-6">
@@ -215,9 +215,9 @@ export default function LandingPage() {
           </div>
         </section>
         {/* SECTION: How it Works (Dual-Engine Architecture) */}
-        <section className="py-32 px-6 bg-[#061a12]">
+        <section className="py-16 md:py-32 px-6 bg-[#061a12]">
           <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-24">
+            <div className="text-center mb-12 md:mb-24">
               <span className="section-label mx-auto">The Architecture</span>
               <h2 className="text-4xl md:text-7xl font-bold tracking-tight leading-[0.9] text-white">
                 Dual-Engine <br /> Intelligence.
@@ -276,10 +276,10 @@ export default function LandingPage() {
           </div>
         </section>
         {/* SECTION: The Comparison (Pathway vs Legacy) */}
-        <section id="why-us" className="py-32 px-6 bg-[#061a12] border-t border-white/5">
+        <section id="why-us" className="py-16 md:py-32 px-6 bg-[#061a12] border-t border-white/5">
           <div className="max-w-7xl mx-auto text-center">
             <span className="section-label mx-auto">Market Disruption</span>
-            <h2 className="text-4xl md:text-7xl font-light tracking-tight leading-[0.9] text-white mb-20">
+            <h2 className="text-4xl md:text-7xl font-light tracking-tight leading-[1.1] md:leading-[0.9] text-white mb-12 md:mb-20">
               Legacy Consultants <br /> vs. <span className="font-bold text-[#c1ff72]">Pathway AI.</span>
             </h2>
 
@@ -337,16 +337,16 @@ export default function LandingPage() {
         </section>
 
         {/* SECTION: Professional Case Study */}
-        <section className="py-32 px-6 overflow-hidden">
+        <section className="py-16 md:py-32 px-6 overflow-hidden">
           <div className="max-w-7xl mx-auto">
-            <div className="bg-[#061a12] rounded-[60px] p-8 md:p-24 relative overflow-hidden border border-white/5 shadow-[0_80px_160px_rgba(0,0,0,0.8)]">
+            <div className="bg-[#061a12] rounded-[40px] md:rounded-[60px] p-8 md:p-24 relative overflow-hidden border border-white/5 shadow-[0_80px_160px_rgba(0,0,0,0.8)]">
               {/* Background Accent */}
               <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-[#c1ff72]/5 to-transparent" />
               
               <div className="relative z-10 grid lg:grid-cols-2 gap-20 items-center">
                 <div>
                   <span className="bg-[#c1ff72] text-[#061a12] px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-10 inline-block">Impact Study 01</span>
-                  <h2 className="text-4xl md:text-6xl font-bold text-white tracking-tight leading-[0.9] mb-8">
+                  <h2 className="text-4xl md:text-6xl font-bold text-white tracking-tight leading-[1.1] md:leading-[0.9] mb-8">
                     From Lahore to <br /> Munich in 45 days.
                   </h2>
                   <p className="text-white/50 text-xl leading-relaxed mb-12 font-jakarta italic">
@@ -384,12 +384,12 @@ export default function LandingPage() {
         </section>
 
         {/* SECTION: The Trust Layer (Institutional Grade Security) */}
-        <section className="py-32 px-6 border-y border-white/5 bg-[#061a12]">
+        <section className="py-16 md:py-32 px-6 border-y border-white/5 bg-[#061a12]">
           <div className="max-w-7xl mx-auto">
             <div className="grid lg:grid-cols-2 gap-24 items-center">
               <div>
                 <span className="section-label">Enterprise Security</span>
-                <h2 className="text-4xl md:text-7xl font-bold tracking-tight leading-[0.9] text-white mb-10">
+                <h2 className="text-4xl md:text-7xl font-bold tracking-tight leading-[1.1] md:leading-[0.9] text-white mb-8 md:mb-10">
                   Built for Security. <br />
                   Scaled for Trust.
                 </h2>
@@ -443,11 +443,11 @@ export default function LandingPage() {
         </section>
 
         {/* SECTION: Interactive FAQ */}
-        <section id="faq" className="py-20 md:py-40 px-6 bg-white/[0.01]">
+        <section id="faq" className="py-16 md:py-40 px-6 bg-white/[0.01]">
           <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 md:gap-24">
             <div className="text-center lg:text-left">
               <span className="section-label mx-auto lg:mx-0">Expert Triage</span>
-              <h2 className="text-4xl md:text-7xl font-bold tracking-tight leading-[0.9] text-white mb-8">Compliance & <br /> Clarity.</h2>
+              <h2 className="text-4xl md:text-7xl font-bold tracking-tight leading-[1.1] md:leading-[0.9] text-white mb-8">Compliance & <br /> Clarity.</h2>
               <p className="text-[#f6f6e9]/60 text-lg md:text-xl leading-relaxed mb-12 font-jakarta">
                 Navigating international immigration law requires precision. We act as a compliant triage engine before hand-off to certified legal advisors.
               </p>
@@ -494,19 +494,19 @@ export default function LandingPage() {
       </main>
 
       {/* WORLD CLASS FOOTER */}
-      <footer className="bg-[#061a12] pt-40 pb-20 border-t border-white/5 px-6">
+      <footer className="bg-[#061a12] pt-20 md:pt-40 pb-12 md:pb-20 border-t border-white/5 px-6">
         <div className="max-w-7xl mx-auto">
           {/* Top Branding Section */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-32 gap-12 text-left">
             <div className="max-w-2xl">
               <img src="/logo.svg" alt="Pathway Logo" className="h-20 md:h-28 w-auto mb-10 -ml-2" />
-              <h2 className="text-4xl md:text-6xl font-bold text-white tracking-tight leading-[0.9]">
+              <h2 className="text-4xl md:text-6xl font-bold text-white tracking-tight leading-[1.1] md:leading-[0.9]">
                 The first autonomous <br /> AI Student Copilot.
               </h2>
             </div>
             <Link 
               href="/onboarding"
-              className="bg-[#c1ff72] text-[#061a12] px-12 py-6 rounded-2xl font-bold text-xl hover:scale-110 transition-all shadow-[0_20px_50px_rgba(193,255,114,0.3)] uppercase tracking-widest active:scale-95"
+              className="bg-[#c1ff72] text-[#061a12] px-8 md:px-12 py-4 md:py-6 rounded-xl md:rounded-2xl font-bold text-lg md:text-xl hover:scale-110 transition-all shadow-[0_20px_50px_rgba(193,255,114,0.3)] uppercase tracking-widest active:scale-95"
             >
               Get Started
             </Link>
