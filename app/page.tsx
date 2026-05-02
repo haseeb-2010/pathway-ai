@@ -32,7 +32,7 @@ export default function LandingPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   return (
-    <div className="min-h-screen relative overflow-x-hidden">
+    <div className="min-h-screen relative overflow-x-hidden bg-[#061a12]">
       {/* Navigation - Capsule Style */}
       <div className="fixed top-4 md:top-8 left-1/2 -translate-x-1/2 z-50 w-[85%] md:w-[95%] max-w-5xl">
         <nav className="glass px-3 md:px-8 py-3 flex items-center justify-between rounded-full border border-white/10 shadow-[0_32px_64px_rgba(0,0,0,0.5)]">
@@ -58,19 +58,19 @@ export default function LandingPage() {
         {/* HERO SECTION: AI Student Copilot */}
         <motion.section 
           id="matching" 
-          initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
-          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="py-12 md:py-16 px-6"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          viewport={{ once: true, margin: "-10% 0px -10% 0px" }}
+          className="py-12 md:py-16 px-6 will-change-transform will-change-opacity"
         >
           <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-4 md:gap-24 items-center">
             <motion.div 
-              initial={{ opacity: 0, x: -30, filter: "blur(10px)" }}
-              whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
-              transition={{ duration: 0.8, delay: 0.2 }}
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
               viewport={{ once: true }}
-              className="text-center lg:text-left"
+              className="text-center lg:text-left will-change-transform"
             >
               <span className="section-label mx-auto lg:mx-0">AI Student Copilot</span>
               <h1 className="text-4xl md:text-8xl font-bold tracking-tight leading-[1.1] md:leading-[0.9] text-white mb-6 md:mb-8">
@@ -143,87 +143,87 @@ export default function LandingPage() {
         {/* SECTION: Internship Module */}
         <motion.section 
           id="internships" 
-          initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
-          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="py-10 md:py-32 px-6 bg-[#c1ff72]/[0.02] border-y border-[#c1ff72]/5"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          viewport={{ once: true, margin: "-10% 0px -10% 0px" }}
+          className="py-10 md:py-32 px-6 bg-[#c1ff72]/[0.02] border-y border-[#c1ff72]/5 will-change-transform will-change-opacity"
         >
-          <div className="max-w-7xl mx-auto">
-            <div className="grid lg:grid-cols-2 gap-12 md:gap-24 items-center">
-              <div>
-                <span className="section-label">Global Career Placement</span>
-                <h2 className="text-4xl md:text-7xl font-bold tracking-tight leading-[1.1] md:leading-[0.9] text-white mb-8">
-                  Work before you <br /> even graduate.
-                </h2>
-                <p className="text-[#f6f6e9]/60 text-lg md:text-xl leading-relaxed mb-12 font-jakarta">
-                  Our Career Copilot doesn't just match you to degrees—it matches you to integrated internship tracks in Munich, London, and Singapore.
-                </p>
-                
-                <div className="grid sm:grid-cols-2 gap-6 md:gap-8">
-                  {[
-                    { title: "Munich Tech Hub", desc: "Direct pipelines to Siemens and BMW junior associate tracks." },
-                    { title: "London Finance", desc: "Early-entry quant and analyst roles for STEM graduates." }
-                  ].map((item, i) => (
-                    <div key={i} className="space-y-4">
-                      <div className="w-12 h-12 rounded-2xl bg-[#c1ff72]/10 flex items-center justify-center">
-                        <Briefcase className="w-6 h-6 text-[#c1ff72]" />
-                      </div>
-                      <h4 className="text-white font-bold text-lg">{item.title}</h4>
-                      <p className="text-white/30 text-sm leading-relaxed">{item.desc}</p>
-                    </div>
-                  ))}
+          <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 md:gap-24 items-center">
+             <div className="text-center lg:text-left">
+              <span className="section-label mx-auto lg:mx-0">Global Career Placement</span>
+              <h2 className="text-4xl md:text-7xl font-bold tracking-tight leading-[0.9] text-[#c1ff72] mb-8">
+                Market Match. <br />
+                Career Acceleration.
+              </h2>
+              <p className="text-[#f6f6e9]/60 text-lg md:text-xl leading-relaxed mb-4 md:mb-10 max-w-lg mx-auto lg:mx-0 font-jakarta">
+                Our AI aligns your hyper-specific academic trajectory with precise global market demands. Find internships at Fortune 500 companies that predict your learning gains.
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-4 md:mb-10">
+                <div className="glass p-6 rounded-2xl">
+                  <Globe className="w-6 h-6 text-[#c1ff72] mb-4 mx-auto lg:mx-0" />
+                  <h4 className="font-bold text-sm text-white mb-2">20+ Countries</h4>
+                  <p className="text-white/40 text-xs font-medium">From Finance in London to Media in Sydney.</p>
+                </div>
+                <div className="glass p-6 rounded-2xl">
+                  <TrendingUp className="w-6 h-6 text-[#c1ff72] mb-4 mx-auto lg:mx-0" />
+                  <h4 className="font-bold text-sm text-white mb-2">Predictive ROI</h4>
+                  <p className="text-white/40 text-xs font-medium">Modeled after Pro-CaRE analytics for career growth.</p>
                 </div>
               </div>
+            </div>
 
-              <div className="relative">
-                <motion.div 
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.8 }}
-                  viewport={{ once: true }}
-                  className="glass p-6 md:p-10 rounded-[40px] border-white/5"
-                >
-                  <TrendingUp className="w-6 h-6 text-[#c1ff72] mb-4 mx-auto lg:mx-0" />
-                  <h3 className="text-white font-bold text-xl md:text-2xl text-center lg:text-left mb-8 md:mb-10">Internship Yield</h3>
-                  <div className="space-y-6 md:space-y-8">
-                    {[
-                      { city: "Munich", role: "AI Research Intern", pay: "€1,800/mo" },
-                      { city: "Singapore", role: "Data Analyst", pay: "$2,400/mo" },
-                      { city: "London", role: "Fintech Associate", pay: "£2,100/mo" }
-                    ].map((job, i) => (
-                      <motion.div 
-                        key={i} 
-                        initial={{ opacity: 0, y: 10 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: 0.4 + (i * 0.1) }}
-                        viewport={{ once: true }}
-                        className="flex justify-between items-center"
-                      >
-                        <div>
-                          <p className="text-white font-bold text-sm md:text-base">{job.role}</p>
-                          <p className="text-[10px] text-white/20 font-bold uppercase tracking-widest">{job.city}</p>
-                        </div>
-                        <span className="text-[#c1ff72] font-black text-sm md:text-base">{job.pay}</span>
-                      </motion.div>
-                    ))}
-                  </div>
-                </motion.div>
-                
-                <motion.div 
-                  initial={{ opacity: 0, x: -50, rotate: 0 }}
-                  whileInView={{ opacity: 1, x: 0, rotate: -6 }}
-                  transition={{ duration: 1, delay: 0.6 }}
-                  viewport={{ once: true }}
-                  className="yellow-card w-[220px] h-[220px] md:w-[260px] md:h-[260px] absolute -top-10 left-0 md:left-0 lg:-left-12 shadow-[0_40px_80px_rgba(0,0,0,0.5)] border-4 border-[#061a12]"
-                >
-                  <p className="text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] opacity-40">Placement ROI</p>
-                  <div className="mt-auto">
-                    <p className="text-5xl md:text-7xl font-bold tracking-tighter">14x</p>
-                    <p className="text-[10px] font-bold uppercase opacity-30 mt-4 tracking-widest text-[#061a12]">Income Multiple</p>
-                  </div>
-                </motion.div>
-              </div>
+            <div className="relative h-[400px] md:h-[500px] flex items-center justify-center scale-[0.9] md:scale-100">
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.8, rotate: 0 }}
+                whileInView={{ opacity: 1, scale: 1, rotate: 3 }}
+                transition={{ duration: 1, delay: 0.4 }}
+                viewport={{ once: true }}
+                className="glass p-5 md:p-8 rounded-[32px] w-full max-w-[440px] shadow-[0_40px_80px_rgba(0,0,0,0.4)] border-white/5 z-10"
+              >
+                <p className="text-[#c1ff72] text-[10px] font-bold mb-6 uppercase tracking-widest text-center md:text-left">Active Internship Matches</p>
+                <div className="space-y-4">
+                  {[
+                    { role: "Software Engineer", company: "Google", loc: "Munich", stipend: "€1,800/mo", roi: "High" },
+                    { role: "Investment Analyst", company: "Goldman Sachs", loc: "London", stipend: "£2,200/mo", roi: "Elite" },
+                    { role: "Product Manager", company: "Spotify", loc: "Stockholm", stipend: "€2,100/mo", roi: "Very High" }
+                  ].map((job, i) => (
+                    <motion.div 
+                      key={i}
+                      initial={{ opacity: 0, x: 20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.5, delay: 0.5 + (i * 0.1) }}
+                      viewport={{ once: true }}
+                      className="flex items-center gap-3 md:gap-4 p-3 md:p-4 rounded-2xl bg-white/[0.03] border border-white/5 hover:bg-white/[0.05] transition-all group"
+                    >
+                      <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white/5 flex items-center justify-center">
+                        <Briefcase className="w-4 h-4 md:w-5 md:h-5 text-white/40 group-hover:text-[#c1ff72] transition-colors" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-bold text-xs md:text-sm text-white">{job.role}</p>
+                        <p className="text-[10px] md:text-xs text-white/30 font-bold">{job.company}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-[#c1ff72] font-bold text-[10px] md:text-xs">{job.stipend}</p>
+                        <p className="text-[9px] font-bold text-white/20 uppercase tracking-tighter">{job.roi} ROI</p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+              <motion.div 
+                initial={{ opacity: 0, x: -50, rotate: 0 }}
+                whileInView={{ opacity: 1, x: 0, rotate: -6 }}
+                transition={{ duration: 1, delay: 0.6 }}
+                viewport={{ once: true }}
+                className="yellow-card w-[220px] h-[220px] md:w-[260px] md:h-[260px] absolute -top-10 left-0 md:left-0 lg:-left-12 shadow-[0_40px_80px_rgba(0,0,0,0.5)] border-4 border-[#061a12]"
+              >
+                <p className="text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] opacity-40">Placement ROI</p>
+                <div className="mt-auto">
+                  <p className="text-5xl md:text-7xl font-bold tracking-tighter">14x</p>
+                  <p className="text-[10px] font-bold uppercase opacity-30 mt-4 tracking-widest text-[#061a12]">Income Multiple</p>
+                </div>
+              </motion.div>
             </div>
           </div>
         </motion.section>
@@ -231,11 +231,11 @@ export default function LandingPage() {
         {/* SECTION 3: Financial Aid */}
         <motion.section 
           id="funding" 
-          initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
-          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="py-10 md:py-32 px-6 border-b border-white/5"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          viewport={{ once: true, margin: "-10% 0px -10% 0px" }}
+          className="py-10 md:py-32 px-6 border-b border-white/5 will-change-transform will-change-opacity"
         >
           <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 md:gap-24 items-center">
             <div className="order-2 lg:order-1 relative h-[450px] md:h-[500px] w-full flex items-center justify-center lg:justify-start scale-[0.85] md:scale-100">
@@ -293,11 +293,11 @@ export default function LandingPage() {
 
         {/* SECTION: How it Works (Dual-Engine Architecture) */}
         <motion.section 
-          initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
-          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="py-10 md:py-32 px-6 bg-[#061a12]"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          viewport={{ once: true, margin: "-10% 0px -10% 0px" }}
+          className="py-10 md:py-32 px-6 bg-[#061a12] will-change-transform will-change-opacity"
         >
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-12 md:mb-24">
@@ -369,11 +369,11 @@ export default function LandingPage() {
         {/* SECTION: The Comparison (Pathway vs Legacy) */}
         <motion.section 
           id="why-us" 
-          initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
-          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="py-10 md:py-32 px-6 bg-[#061a12] border-t border-white/5"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          viewport={{ once: true, margin: "-10% 0px -10% 0px" }}
+          className="py-10 md:py-32 px-6 bg-[#061a12] border-t border-white/5 will-change-transform will-change-opacity"
         >
           <div className="max-w-7xl mx-auto text-center">
             <span className="section-label mx-auto">Market Disruption</span>
@@ -448,11 +448,11 @@ export default function LandingPage() {
 
         {/* SECTION: Professional Case Study */}
         <motion.section 
-          initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
-          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="py-10 md:py-32 px-6 overflow-hidden"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          viewport={{ once: true, margin: "-10% 0px -10% 0px" }}
+          className="py-10 md:py-32 px-6 overflow-hidden will-change-transform will-change-opacity"
         >
           <div className="max-w-7xl mx-auto">
             <div className="bg-[#061a12] rounded-[32px] md:rounded-[60px] p-4 md:p-24 relative overflow-hidden border border-white/5 shadow-[0_80px_160px_rgba(0,0,0,0.8)]">
@@ -514,11 +514,11 @@ export default function LandingPage() {
 
         {/* SECTION: The Trust Layer (Institutional Grade Security) */}
         <motion.section 
-          initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
-          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="py-10 md:py-32 px-6 border-y border-white/5 bg-[#061a12] overflow-hidden"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          viewport={{ once: true, margin: "-10% 0px -10% 0px" }}
+          className="py-10 md:py-32 px-6 border-y border-white/5 bg-[#061a12] overflow-hidden will-change-transform will-change-opacity"
         >
           <div className="max-w-7xl mx-auto">
             <div className="grid lg:grid-cols-2 gap-24 items-center">
@@ -580,11 +580,11 @@ export default function LandingPage() {
         {/* SECTION: Interactive FAQ */}
         <motion.section 
           id="faq" 
-          initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
-          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="py-10 md:py-40 px-6 bg-white/[0.01]"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          viewport={{ once: true, margin: "-10% 0px -10% 0px" }}
+          className="py-10 md:py-40 px-6 bg-white/[0.01] will-change-transform will-change-opacity"
         >
           <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 md:gap-24">
             <div className="text-center lg:text-left">
