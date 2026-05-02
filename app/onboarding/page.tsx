@@ -556,14 +556,14 @@ function StepCertificates({ certs, setCerts }: any) {
 
   return (
     <div className="space-y-10">
-      <div className="flex items-center justify-between">
-        <div>
+      <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="text-center md:text-left">
           <span className="bg-[#c1ff72]/10 text-[#c1ff72] px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4 inline-block border border-[#c1ff72]/20">Verification</span>
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight">Certificates.</h2>
+          <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Certificates.</h2>
         </div>
         <button 
           onClick={() => setModalOpen(true)}
-          className="bg-[#c1ff72] text-[#061a12] px-8 py-4 rounded-2xl font-bold text-xs uppercase tracking-widest flex items-center gap-2"
+          className="bg-[#c1ff72] text-[#061a12] px-6 md:px-8 py-3 md:py-4 rounded-xl md:rounded-2xl font-bold text-[10px] md:text-xs uppercase tracking-widest flex items-center gap-2 w-full md:w-auto justify-center"
         >
           <Plus className="w-4 h-4" /> Add New
         </button>
@@ -644,16 +644,18 @@ function StepAchievements({ achievements, setAchievements }: any) {
 
   return (
     <div className="space-y-10">
-      <div className="flex items-center justify-between">
-        <div>
+      <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="text-center md:text-left">
           <span className="bg-[#ffe44d]/10 text-[#ffe44d] px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4 inline-block border border-[#ffe44d]/20">Legacy</span>
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight">Achievements.</h2>
+          <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Achievements.</h2>
         </div>
         <button 
           onClick={() => setModalOpen(true)}
-          className="bg-[#ffe44d] text-[#061a12] px-8 py-4 rounded-2xl font-bold text-xs uppercase tracking-widest flex items-center gap-2"
+          className="bg-[#ffe44d] text-[#061a12] px-6 md:px-8 py-3 md:py-4 rounded-xl md:rounded-2xl font-bold text-[10px] md:text-xs uppercase tracking-widest flex items-center gap-2 w-full md:w-auto justify-center"
         >
-          <Plus className="w-4 h-4" /> Add Recognition
+          <Plus className="w-4 h-4" /> 
+          <span className="md:hidden">Add New</span>
+          <span className="hidden md:inline">Add Recognition</span>
         </button>
       </div>
 

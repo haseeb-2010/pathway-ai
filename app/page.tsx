@@ -32,12 +32,12 @@ export default function LandingPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   return (
-    <div className="min-h-screen relative">
+    <div className="min-h-screen relative overflow-x-hidden">
       {/* Navigation - Capsule Style */}
-      <div className="fixed top-4 md:top-8 left-1/2 -translate-x-1/2 z-50 w-[90%] md:w-[95%] max-w-5xl">
-        <nav className="glass px-4 md:px-8 py-3 md:py-3 flex items-center justify-between rounded-full border border-white/10 shadow-[0_32px_64px_rgba(0,0,0,0.5)]">
-          <div className="flex items-center">
-            <img src="/logo.svg" alt="Pathway Logo" className="h-7 md:h-8 w-auto object-contain" />
+      <div className="fixed top-4 md:top-8 left-1/2 -translate-x-1/2 z-50 w-[88%] md:w-[95%] max-w-5xl">
+        <nav className="glass px-3 md:px-8 py-4 md:py-3 flex items-center justify-between rounded-full border border-white/10 shadow-[0_32px_64px_rgba(0,0,0,0.5)]">
+          <div className="flex items-center shrink-0">
+            <img src="/logo.svg" alt="Pathway Logo" className="h-6 md:h-8 w-auto object-contain" />
           </div>
           <div className="hidden md:flex items-center gap-10 text-[11px] font-bold text-white/50 uppercase tracking-[0.25em] font-jakarta">
             <Link href="#matching" className="hover:text-[#c1ff72] transition-colors">Education</Link>
@@ -47,7 +47,7 @@ export default function LandingPage() {
           </div>
           <Link 
             href="/onboarding"
-            className="bg-[#c1ff72] hover:bg-[#c1ff72]/90 text-[#061a12] px-4 md:px-6 py-2 md:py-2.5 rounded-xl font-bold text-[10px] md:text-xs transition-all flex items-center gap-2 uppercase tracking-widest active:scale-95"
+            className="bg-[#c1ff72] hover:bg-[#c1ff72]/90 text-[#061a12] px-3 md:px-6 py-2 md:py-2.5 rounded-xl font-bold text-[9px] md:text-xs transition-all flex items-center gap-1 md:gap-2 uppercase tracking-widest active:scale-95 shrink-0"
           >
             Get Started <ArrowRight className="w-3 h-3 md:w-4 md:h-4" />
           </Link>
@@ -103,7 +103,7 @@ export default function LandingPage() {
                   ))}
                 </div>
               </div>
-              <div className="yellow-card w-[200px] h-[200px] md:w-[240px] md:h-[240px] absolute -bottom-6 -right-4 md:-bottom-10 md:right-0 lg:-right-10 transform rotate-12 shadow-[0_40px_80px_rgba(0,0,0,0.6)] border-4 border-[#061a12]">
+              <div className="yellow-card w-[200px] h-[200px] md:w-[240px] md:h-[240px] absolute -bottom-6 right-0 md:right-0 lg:-right-10 transform rotate-12 shadow-[0_40px_80px_rgba(0,0,0,0.6)] border-4 border-[#061a12]">
                 <p className="text-[10px] md:text-xs font-bold uppercase tracking-[0.15em] opacity-60">Visa Success</p>
                 <div className="mt-auto">
                   <p className="text-5xl md:text-7xl font-bold tracking-tighter">92%</p>
