@@ -233,9 +233,6 @@ export default function OnboardingPage() {
     }
   };
 
-  const [authMode, setAuthMode] = useState<'signin' | 'signup' | 'forgot'>('signin');
-  const [authError, setAuthError] = useState<string | null>(null);
-
   if (loading) return (
     <div className="min-h-screen bg-[#061a12] flex items-center justify-center">
       <div className="w-12 h-12 border-4 border-[#c1ff72] border-t-transparent rounded-full animate-spin" />
