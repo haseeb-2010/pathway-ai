@@ -546,7 +546,7 @@ export default function LandingPage() {
           </div>
 
           {/* Links Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 mb-32 border-t border-white/5 pt-20 text-left">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 mb-16 md:mb-32 border-t border-white/5 pt-20 text-left">
             <div>
               <h4 className="text-white font-bold uppercase text-[10px] tracking-[0.3em] mb-8">Platform</h4>
               <ul className="space-y-4 text-white/40 font-bold text-sm">
