@@ -85,14 +85,14 @@ export default function DashboardLayout({
                 <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-[#061a12]" />
               )}
             </Link>
-            <div className="flex items-center gap-3 pl-3 md:pl-6 border-l border-white/5">
+            <Link href="/dashboard/profile" className="flex items-center gap-3 pl-3 md:pl-6 border-l border-white/5 hover:opacity-80 transition-all">
               <div className="hidden md:block text-right">
                 <p className="text-xs font-bold text-white">{userName}</p>
               </div>
               <div className="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-[#c1ff72]/10 border border-[#c1ff72]/20 flex items-center justify-center overflow-hidden">
-                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=User" alt="Avatar" className="w-full h-full object-cover" />
+                <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${userName}`} alt="Avatar" className="w-full h-full object-cover" />
               </div>
-            </div>
+            </Link>
           </div>
           <button onClick={() => setIsSidebarOpen(true)} className="lg:hidden p-2 text-white/60 hover:text-white">
             <Menu className="w-6 h-6" />
