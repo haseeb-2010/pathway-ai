@@ -394,7 +394,7 @@ export default function OnboardingPage() {
       <header className="fixed top-0 left-0 w-full z-50 bg-[#061a12]/80 backdrop-blur-xl border-b border-white/5 px-4 md:px-6 py-3 md:py-4">
         <div className="max-w-5xl mx-auto flex items-center justify-between gap-4">
           <Link href="/" className="shrink-0">
-            <img src="/logo.svg" alt="Pathway Logo" className="h-8 md:h-10" />
+            <img src="/logo.svg" alt="Pathway Logo" className="h-8 md:h-10 w-auto object-contain -ml-2 md:-ml-4 scale-125" />
           </Link>
           <div className="flex-1 max-w-md">
             <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">

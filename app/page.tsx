@@ -57,9 +57,9 @@ export default function LandingPage() {
     <div className="min-h-screen relative overflow-x-hidden bg-[#061a12]">
       {/* Navigation - Capsule Style */}
       <div className="fixed top-4 md:top-8 left-1/2 -translate-x-1/2 z-50 w-[85%] md:w-[95%] max-w-5xl">
-        <nav className="glass px-3 md:px-8 py-3 flex items-center justify-between rounded-full border border-white/10 shadow-[0_32px_64px_rgba(0,0,0,0.5)]">
+        <nav className="glass px-3 md:px-8 py-1.5 md:py-3 flex items-center justify-between rounded-full border border-white/10 shadow-[0_32px_64px_rgba(0,0,0,0.5)]">
           <div className="flex items-center shrink-0">
-            <img src="/logo.svg" alt="Pathway Logo" className="h-12 md:h-12 w-auto object-contain" />
+            <img src="/logo.svg" alt="Pathway Logo" className="h-8 md:h-12 w-auto object-contain -ml-2 md:-ml-4 scale-125" />
           </div>
           <div className="hidden md:flex items-center gap-10 text-[11px] font-bold text-white/50 uppercase tracking-[0.25em] font-jakarta">
             <Link href="#matching" className="hover:text-[#c1ff72] transition-colors">Education</Link>
@@ -532,7 +532,7 @@ export default function LandingPage() {
           {/* Top Branding Section */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-32 gap-12 text-left">
             <div className="max-w-2xl">
-              <img src="/logo.svg" alt="Pathway Logo" className="h-24 md:h-32 w-auto mb-10 -ml-2" />
+              <img src="/logo.svg" alt="Pathway Logo" className="h-24 md:h-40 w-auto mb-10 -ml-10 md:-ml-20 scale-[1.5] origin-left" />
               <h2 className="text-4xl md:text-6xl font-bold text-white tracking-tight leading-[1.1] md:leading-[0.9]">
                 The first autonomous <br /> AI Student Copilot.
               </h2>
