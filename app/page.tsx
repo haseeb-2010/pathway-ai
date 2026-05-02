@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, CheckCircle2, Search, Briefcase, Globe, TrendingUp, Plus, ChevronDown } from "lucide-react";
+import { ArrowRight, CheckCircle2, Search, Briefcase, Globe, TrendingUp, Plus, ChevronRight } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
 const faqs = [
