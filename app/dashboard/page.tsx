@@ -72,7 +72,7 @@ export default function DashboardPage() {
         <div className="space-y-6">
            <div className="flex items-center justify-between">
               <h3 className="text-xl font-bold tracking-tight">Active Funnel</h3>
-              <Link href="/dashboard/tracker" className="text-[10px] font-bold text-[#c1ff72] uppercase tracking-widest hover:underline">View Pipeline</Link>
+              <Link href="/dashboard/internships?tab=Tracker" className="text-[10px] font-bold text-[#c1ff72] uppercase tracking-widest hover:underline">View Pipeline</Link>
            </div>
            
            <div className="space-y-4">

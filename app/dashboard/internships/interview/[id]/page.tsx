@@ -29,6 +29,7 @@ export default function InterviewSessionPage() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isFinishing, setIsFinishing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -40,6 +41,7 @@ export default function InterviewSessionPage() {
         .single();
       
       if (error || !data) {
+        console.error("Session Fetch Error:", error);
         router.push('/dashboard/internships');
         return;
       }
@@ -61,6 +63,7 @@ export default function InterviewSessionPage() {
 
   const startInterview = async (sessionData: any) => {
     setIsLoading(true);
+    setError(null);
     try {
       const res = await fetch("/api/chat", {
         method: "POST",
@@ -88,10 +91,12 @@ export default function InterviewSessionPage() {
         }),
       });
       const data = await res.json();
+      if (data.error) throw new Error(data.error);
       const firstMsg = data.choices[0].message.content;
       setMessages([{ role: 'assistant', content: firstMsg }]);
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
+      setError("Failed to start AI session. Please check your connection.");
     } finally {
       setIsLoading(false);
     }
@@ -218,6 +223,15 @@ export default function InterviewSessionPage() {
               </motion.div>
             ))}
           </AnimatePresence>
+          {error && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-center">
+               <div className="bg-red-500/10 border border-red-500/20 p-6 rounded-3xl flex items-center gap-4 text-red-400">
+                  <AlertCircle className="w-5 h-5" />
+                  <p className="text-sm font-medium">{error}</p>
+                  <button onClick={() => startInterview(session)} className="underline font-bold text-xs ml-4">Retry</button>
+               </div>
+            </motion.div>
+          )}
           {isLoading && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
                <div className="bg-white/5 p-6 rounded-3xl rounded-tl-none border border-white/5 flex gap-2">

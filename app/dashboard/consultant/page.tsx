@@ -66,8 +66,8 @@ export default function ConsultantPage() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-280px)] md:h-[calc(100vh-340px)] relative -mb-12">
-      <div className="flex-1 overflow-y-auto pr-2 space-y-6 scrollbar-thin scrollbar-thumb-white/10 pb-24" ref={scrollRef}>
+    <div className="flex flex-col h-[calc(100vh-280px)] md:h-[calc(100vh-340px)] relative overflow-hidden">
+      <div className="flex-1 overflow-y-auto pr-2 space-y-6 scrollbar-hide pb-24" ref={scrollRef}>
         <AnimatePresence initial={false}>
           {messages.map((m, i) => (
             <motion.div
@@ -103,7 +103,7 @@ export default function ConsultantPage() {
         )}
       </div>
 
-      <div className="sticky bottom-0 left-0 right-0 pt-6 pb-6 bg-[#061a12] z-20">
+      <div className="absolute bottom-0 left-0 right-0 pt-6 pb-2 bg-[#061a12] z-20">
         <div className="relative group">
           <input
             type="text"
@@ -111,12 +111,12 @@ export default function ConsultantPage() {
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={(e) => e.key === "Enter" && handleSend()}
             placeholder="Ask anything about your career..."
-            className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 md:px-8 py-5 md:py-6 text-sm md:text-base text-white placeholder:text-white/20 focus:outline-none focus:border-[#c1ff72]/50 transition-all pr-20 md:pr-24 shadow-2xl"
+            className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 md:px-8 py-4 md:py-6 text-sm md:text-base text-white placeholder:text-white/20 focus:outline-none focus:border-[#c1ff72]/50 transition-all pr-16 md:pr-24 shadow-2xl"
           />
           <button
             onClick={handleSend}
             disabled={isLoading || !input.trim()}
-            className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 p-3 md:p-4 bg-[#c1ff72] text-[#061a12] rounded-xl hover:scale-105 transition-all disabled:opacity-50 disabled:hover:scale-100 shadow-lg shadow-[#c1ff72]/20"
+            className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 p-2.5 md:p-4 bg-[#c1ff72] text-[#061a12] rounded-xl hover:scale-105 transition-all disabled:opacity-50 disabled:hover:scale-100 shadow-lg shadow-[#c1ff72]/20"
           >
             <Send className="w-4 h-4 md:w-5 md:h-5" />
           </button>

@@ -2,7 +2,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import { 
   Briefcase, 
   LayoutDashboard, 
@@ -29,8 +30,25 @@ import { supabase, supabaseMatching } from "@/lib/supabase";
 type Tab = 'Dashboard' | 'Tracker' | 'Opportunities' | 'Interview Practice';
 
 export default function InternshipsPage() {
-  const [activeTab, setActiveTab] = useState<Tab>('Dashboard');
+  return (
+    <Suspense fallback={<div className="flex justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-[#c1ff72]" /></div>}>
+      <InternshipsContent />
+    </Suspense>
+  );
+}
+
+function InternshipsContent() {
+  const searchParams = useSearchParams();
+  const initialTab = (searchParams.get('tab') || 'Dashboard') as Tab;
+  const [activeTab, setActiveTab] = useState<Tab>(initialTab);
   const [userId, setUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab && ['Dashboard', 'Tracker', 'Opportunities', 'Interview Practice'].includes(tab)) {
+      setActiveTab(tab as Tab);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
@@ -118,7 +136,7 @@ function StatCard({ title, value, icon, color }: { title: string, value: string,
 function TrackerTab({ userId }: { userId: string | null }) {
   const [apps, setApps] = useState<any[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     async function fetchApps() {
@@ -401,7 +419,7 @@ function TrackerModal({ isOpen, onClose, userId, onRefresh }: { isOpen: boolean,
 
 function OpportunitiesTab({ userId }: { userId: string | null }) {
   const [opps, setOpps] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchMatches = async () => {
     if (!userId) return;
@@ -505,7 +523,7 @@ function OpportunitiesTab({ userId }: { userId: string | null }) {
 function InterviewTab({ userId }: { userId: string | null }) {
   const [sessions, setSessions] = useState<any[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     async function fetchSessions() {
@@ -620,8 +638,10 @@ function InterviewModal({ isOpen, onClose, userId }: { isOpen: boolean, onClose:
     }).select().single();
 
     if (error) {
+      console.error("Session Insert Error:", error);
       alert("Failed to start session: " + error.message);
     } else if (data) {
+      console.log("Session created:", data.id);
       router.push(`/dashboard/internships/interview/${data.id}`);
     }
     setIsSubmitting(false);

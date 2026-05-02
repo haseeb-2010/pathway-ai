@@ -202,7 +202,7 @@ export default function DashboardLayout({
         </AnimatePresence>
 
         {/* Main Content Area */}
-        <main className="flex-1 overflow-y-auto overflow-x-hidden scroll-smooth">
+        <main className={`flex-1 overflow-x-hidden scroll-smooth ${pathname === '/dashboard/consultant' ? 'overflow-hidden' : 'overflow-y-auto'}`}>
           <div className="p-6 md:p-12 max-w-7xl mx-auto">
             {/* Context Title for Main Area */}
             <div className="mb-10 md:mb-16">

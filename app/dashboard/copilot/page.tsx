@@ -30,6 +30,9 @@ export default function CopilotPage() {
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<any>(null);
   const [user, setUser] = useState<any>(null);
+  const [sopDraft, setSopDraft] = useState("");
+  const [isRefining, setIsRefining] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -69,6 +72,41 @@ export default function CopilotPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleRefineSOP = async () => {
+    if (!sopDraft.trim() || isRefining) return;
+    setIsRefining(true);
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: [
+            { 
+              role: "system", 
+              content: "You are an expert SOP consultant. Refine the following draft to make it more professional, impactful, and tailored for graduate admissions. Keep the user's intent but improve vocabulary, structure, and flow. Return ONLY the refined text." 
+            },
+            { role: "user", content: sopDraft }
+          ]
+        })
+      });
+      const data = await res.json();
+      if (data.choices?.[0]?.message?.content) {
+        setSopDraft(data.choices[0].message.content);
+      }
+    } catch (err) {
+      console.error("Refine error:", err);
+      alert("Failed to refine SOP. Please try again.");
+    } finally {
+      setIsRefining(false);
+    }
+  };
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(sopDraft);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
@@ -261,7 +299,7 @@ export default function CopilotPage() {
           >
             <div className="text-center max-w-2xl mx-auto space-y-6">
               <div className="w-16 h-16 rounded-2xl bg-[#ffe44d]/10 flex items-center justify-center mx-auto">
-                <FileTextIcon className="w-8 h-8 text-[#ffe44d]" />
+                <FileText className="w-8 h-8 text-[#ffe44d]" />
               </div>
               <h2 className="text-4xl font-bold tracking-tight">SOP Cognitive <br /> Collaborator.</h2>
               <p className="text-white/40 leading-relaxed font-jakarta">
@@ -301,10 +339,27 @@ export default function CopilotPage() {
                 <textarea 
                   className="w-full h-64 bg-transparent border-none focus:ring-0 text-white/60 text-sm leading-relaxed resize-none font-jakarta"
                   placeholder="Start drafting based on the outline..."
+                  value={sopDraft}
+                  onChange={(e) => setSopDraft(e.target.value)}
                 />
-                <button className="w-full bg-[#c1ff72] text-[#061a12] py-4 rounded-2xl font-bold uppercase tracking-widest text-xs hover:scale-105 transition-all">
-                  Refine with AI
-                </button>
+                <div className="flex gap-4">
+                  <button 
+                    onClick={handleRefineSOP}
+                    disabled={isRefining || !sopDraft.trim()}
+                    className="flex-1 bg-[#c1ff72] text-[#061a12] py-4 rounded-2xl font-bold uppercase tracking-widest text-xs hover:scale-105 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                  >
+                    {isRefining ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />} Refine with AI
+                  </button>
+                  {sopDraft.trim() && (
+                    <button 
+                      onClick={copyToClipboard}
+                      className="bg-white/5 border border-white/10 text-white px-6 py-4 rounded-2xl font-bold uppercase tracking-widest text-[10px] hover:bg-white/10 transition-all flex items-center gap-2"
+                    >
+                      {copied ? <CheckCircle2 className="w-4 h-4 text-[#c1ff72]" /> : <FileText className="w-4 h-4" />}
+                      {copied ? "Copied" : "Copy"}
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           </motion.div>
