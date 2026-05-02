@@ -11,7 +11,7 @@ import {
   BookOpen, 
   Briefcase, 
   Award, 
-  Certificate, 
+  FileBadge, 
   FileText,
   User,
   MapPin,
@@ -89,7 +89,7 @@ export default function OnboardingPage() {
 
   const progress = (step / 6) * 100;
 
-  const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
+  const [authMode, setAuthMode] = useState<'signin' | 'signup' | 'forgot'>('signin');
   const [authError, setAuthError] = useState<string | null>(null);
 
   if (loading) return (
@@ -107,29 +107,33 @@ export default function OnboardingPage() {
           <p className="text-white/40 mb-8 font-jakarta text-sm">Join the 10,000+ students navigating their global future.</p>
           
           <div className="space-y-4">
-            {/* Social Auth */}
-            <div className="grid grid-cols-2 gap-4">
-              <button 
-                onClick={() => supabase.auth.signInWithOAuth({ provider: 'google' })}
-                className="bg-white/5 border border-white/10 text-white p-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-white/10 transition-all text-xs uppercase tracking-widest"
-              >
-                <img src="https://www.google.com/favicon.ico" className="w-4 h-4" alt="Google" />
-                Google
-              </button>
-              <button 
-                onClick={() => supabase.auth.signInWithOAuth({ provider: 'apple' })}
-                className="bg-white text-black p-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-white/90 transition-all text-xs uppercase tracking-widest"
-              >
-                <img src="https://www.apple.com/favicon.ico" className="w-4 h-4 invert" alt="Apple" />
-                Apple
-              </button>
-            </div>
+            {authMode !== 'forgot' && (
+              <>
+                {/* Social Auth */}
+                <div className="grid grid-cols-2 gap-4">
+                  <button 
+                    onClick={() => supabase.auth.signInWithOAuth({ provider: 'google' })}
+                    className="bg-white/5 border border-white/10 text-white p-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-white/10 transition-all text-xs uppercase tracking-widest"
+                  >
+                    <img src="https://www.google.com/favicon.ico" className="w-4 h-4" alt="Google" />
+                    Google
+                  </button>
+                  <button 
+                    onClick={() => supabase.auth.signInWithOAuth({ provider: 'apple' })}
+                    className="bg-white text-black p-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-white/90 transition-all text-xs uppercase tracking-widest"
+                  >
+                    <img src="https://www.apple.com/favicon.ico" className="w-4 h-4 invert" alt="Apple" />
+                    Apple
+                  </button>
+                </div>
 
-            <div className="flex items-center gap-4 my-6">
-              <div className="h-[1px] flex-1 bg-white/5" />
-              <span className="text-[10px] font-bold text-white/10 uppercase tracking-widest">or email</span>
-              <div className="h-[1px] flex-1 bg-white/5" />
-            </div>
+                <div className="flex items-center gap-4 my-6">
+                  <div className="h-[1px] flex-1 bg-white/5" />
+                  <span className="text-[10px] font-bold text-white/10 uppercase tracking-widest">or email</span>
+                  <div className="h-[1px] flex-1 bg-white/5" />
+                </div>
+              </>
+            )}
 
             {/* Email/Pass Auth */}
             <form className="space-y-4 text-left" onSubmit={async (e) => {
@@ -141,29 +145,49 @@ export default function OnboardingPage() {
               
               if (authMode === 'signin') {
                 const { error } = await supabase.auth.signInWithPassword({ email, password });
-                if (error) setAuthError(error.message);
-              } else {
+                if (error) {
+                  if (error.message.includes("Invalid login credentials")) {
+                    setAuthError("Wrong password or account not found. Are you new? Try Signing Up.");
+                  } else {
+                    setAuthError(error.message);
+                  }
+                }
+              } else if (authMode === 'signup') {
                 const { error } = await supabase.auth.signUp({ email, password });
                 if (error) setAuthError(error.message);
                 else alert("Check your email for confirmation!");
+              } else if (authMode === 'forgot') {
+                const { error } = await supabase.auth.resetPasswordForEmail(email);
+                if (error) setAuthError(error.message);
+                else {
+                  alert("Password reset link sent to your email!");
+                  setAuthMode('signin');
+                }
               }
             }}>
-              <div className="flex bg-white/5 p-1 rounded-xl mb-4">
-                <button 
-                  type="button"
-                  onClick={() => setAuthMode('signin')}
-                  className={`flex-1 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all ${authMode === 'signin' ? 'bg-[#c1ff72] text-[#061a12]' : 'text-white/40'}`}
-                >
-                  Sign In
-                </button>
-                <button 
-                  type="button"
-                  onClick={() => setAuthMode('signup')}
-                  className={`flex-1 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all ${authMode === 'signup' ? 'bg-[#c1ff72] text-[#061a12]' : 'text-white/40'}`}
-                >
-                  Sign Up
-                </button>
-              </div>
+              {authMode !== 'forgot' ? (
+                <div className="flex bg-white/5 p-1 rounded-xl mb-4">
+                  <button 
+                    type="button"
+                    onClick={() => setAuthMode('signin')}
+                    className={`flex-1 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all ${authMode === 'signin' ? 'bg-[#c1ff72] text-[#061a12]' : 'text-white/40'}`}
+                  >
+                    Sign In
+                  </button>
+                  <button 
+                    type="button"
+                    onClick={() => setAuthMode('signup')}
+                    className={`flex-1 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all ${authMode === 'signup' ? 'bg-[#c1ff72] text-[#061a12]' : 'text-white/40'}`}
+                  >
+                    Sign Up
+                  </button>
+                </div>
+              ) : (
+                <div className="text-center mb-8">
+                  <h3 className="text-xl font-bold mb-2">Reset Password</h3>
+                  <p className="text-white/30 text-[10px] uppercase tracking-widest font-bold">We'll send a link to your inbox</p>
+                </div>
+              )}
 
               <div className="space-y-4">
                 <input 
@@ -173,20 +197,43 @@ export default function OnboardingPage() {
                   className="w-full bg-white/5 border border-white/5 p-4 rounded-xl text-white outline-none focus:bg-white/10 transition-all font-jakarta text-sm"
                   required
                 />
-                <input 
-                  name="password"
-                  type="password" 
-                  placeholder="Password" 
-                  className="w-full bg-white/5 border border-white/5 p-4 rounded-xl text-white outline-none focus:bg-white/10 transition-all font-jakarta text-sm"
-                  required
-                />
+                {authMode !== 'forgot' && (
+                  <div className="space-y-2">
+                    <input 
+                      name="password"
+                      type="password" 
+                      placeholder="Password" 
+                      className="w-full bg-white/5 border border-white/5 p-4 rounded-xl text-white outline-none focus:bg-white/10 transition-all font-jakarta text-sm"
+                      required
+                    />
+                    {authMode === 'signin' && (
+                      <button 
+                        type="button"
+                        onClick={() => setAuthMode('forgot')}
+                        className="text-[10px] font-bold text-white/20 hover:text-[#c1ff72] transition-colors uppercase tracking-widest ml-1"
+                      >
+                        Forgot Password?
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
 
               {authError && <p className="text-red-400 text-[10px] font-bold uppercase tracking-widest mt-2">{authError}</p>}
 
               <button className="w-full bg-[#c1ff72] text-[#061a12] py-4 rounded-xl font-bold uppercase tracking-widest text-xs hover:scale-[1.02] active:scale-95 transition-all">
-                {authMode === 'signin' ? 'Sign In' : 'Create Account'}
+                {authMode === 'signin' ? 'Sign In' : authMode === 'signup' ? 'Create Account' : 'Send Reset Link'}
               </button>
+
+              {authMode === 'forgot' && (
+                <button 
+                  type="button"
+                  onClick={() => setAuthMode('signin')}
+                  className="w-full text-[10px] font-bold text-white/20 hover:text-white transition-colors uppercase tracking-widest mt-6 text-center"
+                >
+                  <ArrowLeft className="w-3 h-3 inline mr-2" /> Back to Sign In
+                </button>
+              )}
             </form>
           </div>
 
@@ -552,7 +599,7 @@ function StepCertificates({ certs, setCerts }: any) {
           <div key={i} className="glass p-8 rounded-[40px] border-white/5 flex items-center justify-between">
             <div className="flex items-center gap-6">
               <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center">
-                <Certificate className="w-6 h-6 text-[#c1ff72]" />
+                <FileBadge className="w-6 h-6 text-[#c1ff72]" />
               </div>
               <div>
                 <h4 className="text-xl font-bold">{c.name}</h4>
