@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { 
   Briefcase, 
   LayoutDashboard, 
@@ -121,15 +122,21 @@ function TrackerTab({ userId }: { userId: string | null }) {
 
   useEffect(() => {
     if (userId) {
+      setIsLoading(true);
       supabase
         .from('applications')
         .select('*')
         .eq('profile_id', userId)
         .order('created_at', { ascending: false })
-        .then(({ data }) => {
-          setApps(data || []);
+        .then(({ data, error }) => {
+          if (error) {
+            console.error("Fetch Apps Error:", error);
+          } else {
+            setApps(data || []);
+          }
           setIsLoading(false);
-        });
+        })
+        .catch(() => setIsLoading(false));
     }
   }, [userId]);
 
@@ -253,7 +260,9 @@ function TrackerModal({ isOpen, onClose, userId, onRefresh }: { isOpen: boolean,
       profile_id: userId
     });
 
-    if (!error) {
+    if (error) {
+      alert("Failed to add application: " + error.message);
+    } else {
       onRefresh();
       onClose();
     }
@@ -495,15 +504,21 @@ function InterviewTab({ userId }: { userId: string | null }) {
 
   useEffect(() => {
     if (userId) {
+      setIsLoading(true);
       supabase
         .from('interview_sessions')
         .select('*')
         .eq('profile_id', userId)
         .order('created_at', { ascending: false })
-        .then(({ data }) => {
-          setSessions(data || []);
+        .then(({ data, error }) => {
+          if (error) {
+            console.error("Fetch Sessions Error:", error);
+          } else {
+            setSessions(data || []);
+          }
           setIsLoading(false);
-        });
+        })
+        .catch(() => setIsLoading(false));
     }
   }, [userId]);
 
@@ -572,6 +587,7 @@ function InterviewTab({ userId }: { userId: string | null }) {
 }
 
 function InterviewModal({ isOpen, onClose, userId }: { isOpen: boolean, onClose: () => void, userId: string | null }) {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     role: '',
     company: '',
@@ -589,12 +605,14 @@ function InterviewModal({ isOpen, onClose, userId }: { isOpen: boolean, onClose:
 
     const { data, error } = await supabase.from('interview_sessions').insert({
       ...formData,
-      profile_id: userId
+      profile_id: userId,
+      status: 'In Progress'
     }).select().single();
 
-    if (!error && data) {
-      // Redirect to specific interview session page (to be implemented)
-      window.location.href = `/dashboard/internships/interview/${data.id}`;
+    if (error) {
+      alert("Failed to start session: " + error.message);
+    } else if (data) {
+      router.push(`/dashboard/internships/interview/${data.id}`);
     }
     setIsSubmitting(false);
   };

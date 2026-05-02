@@ -32,29 +32,19 @@ export default function ConsultantPage() {
 
     const userMessage = input.trim();
     setInput("");
-    setMessages(prev => [...prev, { role: "user", content: userMessage }]);
+    const newMessages: Message[] = [...messages, { role: "user", content: userMessage }];
+    setMessages(newMessages);
     setIsLoading(true);
 
     try {
-      const response = await fetch("https://integrate.api.nvidia.com/v1/chat/completions", {
+      const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
-          "Authorization": `Bearer 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`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "qwen/qwen3-next-80b-a3b-thinking",
-          messages: [
-            {
-              role: "system",
-              content: "You are the Pathway App AI consultant, a helpful assistant dedicated to helping students with their career and academic goals. Always identify yourself as the Pathway AI Assistant at the end of each message. Keep your advice practical, data-driven, and encouraging."
-            },
-            ...messages.map(m => ({ role: m.role, content: m.content })),
-            { role: "user", content: userMessage }
-          ],
-          temperature: 0.6,
-          max_tokens: 4096,
-          stream: false
+          systemPrompt: "You are the Pathway App AI consultant, a helpful assistant dedicated to helping students with their career and academic goals. Always identify yourself as the Pathway AI Assistant at the end of each message. Keep your advice practical, data-driven, and encouraging.",
+          messages: newMessages
         }),
       });
 
@@ -76,8 +66,8 @@ export default function ConsultantPage() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-200px)]">
-      <div className="flex-1 overflow-y-auto pr-4 space-y-6 scrollbar-thin scrollbar-thumb-white/10" ref={scrollRef}>
+    <div className="flex flex-col h-[calc(100vh-140px)] relative">
+      <div className="flex-1 overflow-y-auto pr-2 space-y-6 scrollbar-thin scrollbar-thumb-white/10 pb-32" ref={scrollRef}>
         <AnimatePresence initial={false}>
           {messages.map((m, i) => (
             <motion.div
@@ -86,13 +76,13 @@ export default function ConsultantPage() {
               animate={{ opacity: 1, y: 0 }}
               className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
             >
-              <div className={`max-w-[80%] flex gap-4 ${m.role === "user" ? "flex-row-reverse" : ""}`}>
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+              <div className={`max-w-[85%] md:max-w-[80%] flex gap-4 ${m.role === "user" ? "flex-row-reverse" : ""}`}>
+                <div className={`w-8 h-8 md:w-10 md:h-10 rounded-xl flex items-center justify-center shrink-0 ${
                   m.role === "user" ? "bg-[#c1ff72]/10 border border-[#c1ff72]/20" : "bg-white/5 border border-white/10"
                 }`}>
-                  {m.role === "user" ? <User className="w-5 h-5 text-[#c1ff72]" /> : <Bot className="w-5 h-5 text-white/60" />}
+                  {m.role === "user" ? <User className="w-4 h-4 md:w-5 md:h-5 text-[#c1ff72]" /> : <Bot className="w-4 h-4 md:w-5 md:h-5 text-white/60" />}
                 </div>
-                <div className={`p-6 rounded-2xl text-sm leading-relaxed ${
+                <div className={`p-4 md:p-6 rounded-2xl text-xs md:text-sm leading-relaxed ${
                   m.role === "user" 
                   ? "bg-[#c1ff72] text-[#061a12] font-medium" 
                   : "bg-white/5 text-white/80 border border-white/5 whitespace-pre-wrap"
@@ -113,23 +103,27 @@ export default function ConsultantPage() {
         )}
       </div>
 
-      <div className="mt-8 relative">
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyPress={(e) => e.key === "Enter" && handleSend()}
-          placeholder="Ask anything about your career..."
-          className="w-full bg-white/5 border border-white/10 rounded-2xl px-8 py-6 text-white placeholder:text-white/20 focus:outline-none focus:border-[#c1ff72]/50 transition-all pr-24"
-        />
-        <button
-          onClick={handleSend}
-          disabled={isLoading || !input.trim()}
-          className="absolute right-4 top-1/2 -translate-y-1/2 p-4 bg-[#c1ff72] text-[#061a12] rounded-xl hover:scale-105 transition-all disabled:opacity-50 disabled:hover:scale-100"
-        >
-          <Send className="w-5 h-5" />
-        </button>
+      <div className="absolute bottom-0 left-0 right-0 pt-8 pb-4 bg-gradient-to-t from-[#061a12] via-[#061a12] to-transparent">
+        <div className="relative group">
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyPress={(e) => e.key === "Enter" && handleSend()}
+            placeholder="Ask anything about your career..."
+            className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 md:px-8 py-5 md:py-6 text-sm md:text-base text-white placeholder:text-white/20 focus:outline-none focus:border-[#c1ff72]/50 transition-all pr-20 md:pr-24 shadow-2xl"
+          />
+          <button
+            onClick={handleSend}
+            disabled={isLoading || !input.trim()}
+            className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 p-3 md:p-4 bg-[#c1ff72] text-[#061a12] rounded-xl hover:scale-105 transition-all disabled:opacity-50 disabled:hover:scale-100"
+          >
+            <Send className="w-4 h-4 md:w-5 md:h-5" />
+          </button>
+        </div>
       </div>
     </div>
+  );
+}
   );
 }

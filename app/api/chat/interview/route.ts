@@ -3,10 +3,10 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    const { messages, systemPrompt } = await req.json();
+    const { messages, session } = await req.json();
 
-    if (!messages) {
-      return NextResponse.json({ error: "Missing messages" }, { status: 400 });
+    if (!messages || !session) {
+      return NextResponse.json({ error: "Missing data" }, { status: 400 });
     }
 
     const response = await fetch("https://integrate.api.nvidia.com/v1/chat/completions", {
@@ -16,27 +16,18 @@ export async function POST(req: Request) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "nvidia/llama-3.1-70b-instruct",
-        messages: [
-          ...(systemPrompt ? [{ role: "system", content: systemPrompt }] : []),
-          ...messages
-        ],
+        model: "nvidia/llama-3.1-70b-instruct", // More stable model
+        messages: messages,
         temperature: 0.7,
-        max_tokens: 4096,
+        max_tokens: 1024,
       }),
     });
 
     const data = await response.json();
-    
-    if (data.error) {
-      console.error("NVIDIA API Error:", data.error);
-      return NextResponse.json({ error: data.error.message }, { status: 500 });
-    }
-
     return NextResponse.json(data);
 
   } catch (error: any) {
-    console.error("Chat API Error:", error);
+    console.error("Interview API Error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

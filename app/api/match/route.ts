@@ -37,7 +37,7 @@ export async function POST(req: Request) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "qwen/qwen3-next-80b-a3b-thinking",
+        model: "nvidia/llama-3.1-70b-instruct",
         messages: [
           {
             role: "system",
@@ -85,8 +85,13 @@ export async function POST(req: Request) {
 
     const aiResponse = await response.json();
     const content = aiResponse.choices[0].message.content;
-    const jsonString = content.replace(/```json|```/g, "").trim();
-    const data = JSON.parse(jsonString);
+    
+    // Robust JSON extraction
+    const jsonMatch = content.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new Error("AI failed to return valid JSON: " + content);
+    }
+    const data = JSON.parse(jsonMatch[0]);
 
     return NextResponse.json(data);
 

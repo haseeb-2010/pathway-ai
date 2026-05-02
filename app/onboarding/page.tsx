@@ -83,11 +83,27 @@ export default function OnboardingPage() {
       
       try {
         // 1. Check if onboarding is completed
-        const { data: profile } = await supabase
+        let { data: profile } = await supabase
           .from('profiles')
           .select('*')
           .eq('id', session.user.id)
           .single();
+        
+        // If profile doesn't exist, create it
+        if (!profile) {
+          const { data: newProfile, error: createError } = await supabase
+            .from('profiles')
+            .insert({ 
+              id: session.user.id, 
+              email: session.user.email,
+              full_name: session.user.user_metadata?.full_name || ""
+            })
+            .select()
+            .single();
+          
+          if (createError) throw createError;
+          profile = newProfile;
+        }
         
         if (profile?.onboarding_completed) {
           router.push('/dashboard');

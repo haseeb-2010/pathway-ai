@@ -62,14 +62,13 @@ export default function InterviewSessionPage() {
   const startInterview = async (sessionData: any) => {
     setIsLoading(true);
     try {
-      const res = await fetch("https://integrate.api.nvidia.com/v1/chat/completions", {
+      const res = await fetch("/api/chat", {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${process.env.NEXT_PUBLIC_NVIDIA_API_KEY || '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'}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "qwen/qwen3-next-80b-a3b-thinking",
+          session: sessionData,
           messages: [
             {
               role: "system",
@@ -107,14 +106,13 @@ export default function InterviewSessionPage() {
     setIsLoading(true);
 
     try {
-      const res = await fetch("https://integrate.api.nvidia.com/v1/chat/completions", {
+      const res = await fetch("/api/chat", {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${process.env.NEXT_PUBLIC_NVIDIA_API_KEY || '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'}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "qwen/qwen3-next-80b-a3b-thinking",
+          session: session,
           messages: [
             {
               role: "system",
@@ -139,14 +137,13 @@ export default function InterviewSessionPage() {
     setIsFinishing(true);
     try {
       // Ask LLM for a score and summary feedback
-      const res = await fetch("https://integrate.api.nvidia.com/v1/chat/completions", {
+      const res = await fetch("/api/chat", {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${process.env.NEXT_PUBLIC_NVIDIA_API_KEY || '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'}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "qwen/qwen3-next-80b-a3b-thinking",
+          session: session,
           messages: [
             {
               role: "system",
