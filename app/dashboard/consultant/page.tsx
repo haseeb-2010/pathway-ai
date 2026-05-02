@@ -66,8 +66,8 @@ export default function ConsultantPage() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-320px)] md:h-[calc(100vh-400px)] relative">
-      <div className="flex-1 overflow-y-auto pr-2 space-y-6 scrollbar-thin scrollbar-thumb-white/10 pb-32" ref={scrollRef}>
+    <div className="flex flex-col h-[calc(100vh-280px)] md:h-[calc(100vh-340px)] relative -mb-12">
+      <div className="flex-1 overflow-y-auto pr-2 space-y-6 scrollbar-thin scrollbar-thumb-white/10 pb-24" ref={scrollRef}>
         <AnimatePresence initial={false}>
           {messages.map((m, i) => (
             <motion.div
@@ -103,7 +103,7 @@ export default function ConsultantPage() {
         )}
       </div>
 
-      <div className="absolute -bottom-4 md:bottom-0 left-0 right-0 pt-8 pb-4 bg-gradient-to-t from-[#061a12] via-[#061a12] to-transparent z-10">
+      <div className="sticky bottom-0 left-0 right-0 pt-6 pb-6 bg-[#061a12] z-20">
         <div className="relative group">
           <input
             type="text"
