@@ -76,12 +76,12 @@ export default function OnboardingPage() {
   const [isAchievementModalOpen, setIsAchievementModalOpen] = useState(false);
 
   useEffect(() => {
-    const checkUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user || null);
       setLoading(false);
-    };
-    checkUser();
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const nextStep = () => setStep(s => Math.min(s + 1, 6));
