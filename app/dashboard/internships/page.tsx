@@ -121,23 +121,28 @@ function TrackerTab({ userId }: { userId: string | null }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (userId) {
+    async function fetchApps() {
+      if (!userId) return;
       setIsLoading(true);
-      supabase
-        .from('applications')
-        .select('*')
-        .eq('profile_id', userId)
-        .order('created_at', { ascending: false })
-        .then(({ data, error }) => {
-          if (error) {
-            console.error("Fetch Apps Error:", error);
-          } else {
-            setApps(data || []);
-          }
-          setIsLoading(false);
-        })
-        .catch(() => setIsLoading(false));
+      try {
+        const { data, error } = await supabase
+          .from('applications')
+          .select('*')
+          .eq('profile_id', userId)
+          .order('created_at', { ascending: false });
+        
+        if (error) {
+          console.error("Fetch Apps Error:", error);
+        } else {
+          setApps(data || []);
+        }
+      } catch (err) {
+        console.error("Fetch Apps Catch:", err);
+      } finally {
+        setIsLoading(false);
+      }
     }
+    fetchApps();
   }, [userId]);
 
   return (
@@ -503,23 +508,28 @@ function InterviewTab({ userId }: { userId: string | null }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (userId) {
+    async function fetchSessions() {
+      if (!userId) return;
       setIsLoading(true);
-      supabase
-        .from('interview_sessions')
-        .select('*')
-        .eq('profile_id', userId)
-        .order('created_at', { ascending: false })
-        .then(({ data, error }) => {
-          if (error) {
-            console.error("Fetch Sessions Error:", error);
-          } else {
-            setSessions(data || []);
-          }
-          setIsLoading(false);
-        })
-        .catch(() => setIsLoading(false));
+      try {
+        const { data, error } = await supabase
+          .from('interview_sessions')
+          .select('*')
+          .eq('profile_id', userId)
+          .order('created_at', { ascending: false });
+
+        if (error) {
+          console.error("Fetch Sessions Error:", error);
+        } else {
+          setSessions(data || []);
+        }
+      } catch (err) {
+        console.error("Fetch Sessions Catch:", err);
+      } finally {
+        setIsLoading(false);
+      }
     }
+    fetchSessions();
   }, [userId]);
 
   return (
