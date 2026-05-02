@@ -148,6 +148,8 @@ export default function OnboardingPage() {
                 if (error) {
                   if (error.message.includes("Invalid login credentials")) {
                     setAuthError("Wrong password or account not found. Are you new? Try Signing Up.");
+                  } else if (error.message.includes("Email not confirmed")) {
+                    setAuthError("Please check your email and click the confirmation link before signing in.");
                   } else {
                     setAuthError(error.message);
                   }
