@@ -22,6 +22,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const pathname = usePathname();
 
   const navItems = [
@@ -39,11 +40,21 @@ export default function DashboardLayout({
   return (
     <div className="min-h-screen bg-[#061a12] text-white flex">
       {/* Sidebar - Desktop */}
-      <aside className="hidden lg:flex flex-col w-72 border-r border-white/5 bg-[#061a12]/50 backdrop-blur-xl h-screen sticky top-0">
-        <div className="p-8">
-          <Link href="/">
+      <motion.aside 
+        animate={{ width: isCollapsed ? 96 : 288 }}
+        transition={{ type: "spring", damping: 20, stiffness: 100 }}
+        className="hidden lg:flex flex-col border-r border-white/5 bg-[#061a12]/50 backdrop-blur-xl h-screen sticky top-0 overflow-hidden"
+      >
+        <div className={`p-8 flex items-center ${isCollapsed ? "justify-center" : "justify-between"}`}>
+          <Link href="/" className={isCollapsed ? "hidden" : "block"}>
             <img src="/logo.svg" alt="Pathway Logo" className="h-8" />
           </Link>
+          <button 
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            className={`p-2 rounded-xl bg-white/5 hover:bg-white/10 text-white/40 hover:text-[#c1ff72] transition-all ${isCollapsed ? "" : ""}`}
+          >
+            {isCollapsed ? <Menu className="w-5 h-5" /> : <X className="w-5 h-5" />}
+          </button>
         </div>
 
         <nav className="flex-1 px-4 py-4 space-y-2">
@@ -53,14 +64,22 @@ export default function DashboardLayout({
               <Link 
                 key={item.name} 
                 href={item.href}
-                className={`flex items-center gap-3 px-6 py-4 rounded-2xl font-bold text-sm transition-all group ${
+                className={`flex items-center rounded-2xl font-bold text-sm transition-all group relative ${
+                  isCollapsed ? "justify-center p-4" : "gap-3 px-6 py-4"
+                } ${
                   isActive 
-                  ? "bg-[#c1ff72] text-[#061a12] shadow-[0_20px_40px_rgba(193,255,114,0.15)]" 
+                  ? "bg-[#c1ff72] text-[#061a12] shadow-[0_10px_20px_rgba(193,255,114,0.1)]" 
                   : "text-white/40 hover:text-white hover:bg-white/5"
                 }`}
               >
-                <item.icon className={`w-5 h-5 ${isActive ? "text-[#061a12]" : "text-white/20 group-hover:text-[#c1ff72]"}`} />
-                {item.name}
+                <item.icon className={`w-5 h-5 shrink-0 ${isActive ? "text-[#061a12]" : "text-white/20 group-hover:text-[#c1ff72]"}`} />
+                {!isCollapsed && <span className="truncate">{item.name}</span>}
+                {isCollapsed && isActive && (
+                  <motion.div 
+                    layoutId="active-pill"
+                    className="absolute inset-0 bg-[#c1ff72] rounded-2xl -z-10"
+                  />
+                )}
               </Link>
             );
           })}
@@ -69,13 +88,15 @@ export default function DashboardLayout({
         <div className="p-6 border-t border-white/5">
           <button 
             onClick={handleSignOut}
-            className="flex items-center gap-3 w-full px-6 py-4 rounded-2xl text-white/40 font-bold text-sm hover:text-red-400 hover:bg-red-400/5 transition-all group"
+            className={`flex items-center gap-3 w-full rounded-2xl text-white/40 font-bold text-sm hover:text-red-400 hover:bg-red-400/5 transition-all group ${
+              isCollapsed ? "justify-center p-4" : "px-6 py-4"
+            }`}
           >
-            <LogOut className="w-5 h-5 text-white/20 group-hover:text-red-400" />
-            Sign Out
+            <LogOut className="w-5 h-5 text-white/20 group-hover:text-red-400 shrink-0" />
+            {!isCollapsed && <span>Sign Out</span>}
           </button>
         </div>
-      </aside>
+      </motion.aside>
 
       {/* Mobile Header */}
       <div className="lg:hidden fixed top-0 left-0 w-full z-50 bg-[#061a12]/80 backdrop-blur-xl border-b border-white/5 px-6 py-4 flex items-center justify-between">
@@ -144,7 +165,7 @@ export default function DashboardLayout({
       </AnimatePresence>
 
       {/* Main Content Area */}
-      <main className="flex-1 min-h-screen pt-24 lg:pt-0">
+      <main className="flex-1 min-h-screen pt-24 lg:pt-0 overflow-x-hidden">
         {/* Top bar - Desktop */}
         <div className="hidden lg:flex items-center justify-between px-12 py-8 border-b border-white/5 bg-[#061a12]/30 backdrop-blur-md sticky top-0 z-40">
           <h2 className="text-xl font-bold tracking-tight text-white/80 uppercase tracking-[0.2em]">
