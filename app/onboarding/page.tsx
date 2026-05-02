@@ -221,13 +221,13 @@ export default function OnboardingPage() {
   return (
     <div className="min-h-screen bg-[#061a12] text-white font-outfit overflow-x-hidden">
       {/* Navigation Header */}
-      <header className="fixed top-0 left-0 w-full z-50 bg-[#061a12]/80 backdrop-blur-xl border-b border-white/5 px-6 py-4">
-        <div className="max-w-5xl mx-auto flex items-center justify-between">
-          <Link href="/">
-            <img src="/logo.svg" alt="Pathway Logo" className="h-8" />
+      <header className="fixed top-0 left-0 w-full z-50 bg-[#061a12]/80 backdrop-blur-xl border-b border-white/5 px-4 md:px-6 py-3 md:py-4">
+        <div className="max-w-5xl mx-auto flex items-center justify-between gap-4">
+          <Link href="/" className="shrink-0">
+            <img src="/logo.svg" alt="Pathway Logo" className="h-6 md:h-8" />
           </Link>
-          <div className="flex-1 max-w-md mx-10">
-            <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+          <div className="flex-1 max-w-md">
+            <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
               <motion.div 
                 initial={{ width: 0 }}
                 animate={{ width: `${progress}%` }}
@@ -240,7 +240,7 @@ export default function OnboardingPage() {
         </div>
       </header>
 
-      <main className="pt-32 pb-40 px-6">
+      <main className="pt-24 md:pt-32 pb-32 md:pb-40 px-4 md:px-6">
         <div className="max-w-3xl mx-auto">
           <AnimatePresence mode="wait">
             <motion.div
@@ -266,8 +266,8 @@ export default function OnboardingPage() {
       </main>
 
       {/* Navigation Controls */}
-      <footer className="fixed bottom-0 left-0 w-full p-6 bg-gradient-to-t from-[#061a12] via-[#061a12] to-transparent z-40">
-        <div className="max-w-3xl mx-auto flex justify-between items-center gap-6">
+      <footer className="fixed bottom-0 left-0 w-full p-4 md:p-6 bg-gradient-to-t from-[#061a12] via-[#061a12] to-transparent z-40">
+        <div className="max-w-3xl mx-auto flex justify-between items-center gap-4">
           {step > 1 && (
             <button 
               onClick={prevStep}
@@ -280,16 +280,16 @@ export default function OnboardingPage() {
           {step < 6 ? (
             <button 
               onClick={nextStep}
-              className="bg-[#c1ff72] text-[#061a12] px-10 py-4 rounded-2xl font-bold flex items-center gap-3 hover:scale-105 active:scale-95 transition-all shadow-[0_20px_40px_rgba(193,255,114,0.2)] uppercase tracking-widest text-xs"
+              className="bg-[#c1ff72] text-[#061a12] px-6 md:px-10 py-3 md:py-4 rounded-xl md:rounded-2xl font-bold flex items-center gap-2 md:gap-3 hover:scale-105 active:scale-95 transition-all shadow-[0_20px_40px_rgba(193,255,114,0.2)] uppercase tracking-widest text-[10px] md:text-xs"
             >
               Continue <ArrowRight className="w-4 h-4" />
             </button>
           ) : (
             <button 
               onClick={() => {}}
-              className="bg-[#ffe44d] text-[#061a12] px-12 py-4 rounded-2xl font-bold flex items-center gap-3 hover:scale-105 active:scale-95 transition-all shadow-[0_20px_40px_rgba(255,228,77,0.2)] uppercase tracking-widest text-xs"
+              className="bg-[#ffe44d] text-[#061a12] px-8 md:px-12 py-3 md:py-4 rounded-xl md:rounded-2xl font-bold flex items-center gap-2 md:gap-3 hover:scale-105 active:scale-95 transition-all shadow-[0_20px_40px_rgba(255,228,77,0.2)] uppercase tracking-widest text-[10px] md:text-xs"
             >
-              Complete Profile <Check className="w-4 h-4" />
+              Complete <Check className="w-4 h-4" />
             </button>
           )}
         </div>
@@ -305,7 +305,7 @@ function StepPersonal({ data, setData, onNext }: any) {
     <div className="space-y-10">
       <div className="text-center md:text-left">
         <span className="bg-[#c1ff72]/10 text-[#c1ff72] px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4 inline-block border border-[#c1ff72]/20">Identification</span>
-        <h2 className="text-4xl md:text-6xl font-bold tracking-tight">Tell us who <br /> you are.</h2>
+        <h2 className="text-3xl md:text-6xl font-bold tracking-tight">Tell us who <br className="hidden md:block" /> you are.</h2>
       </div>
 
       <div className="grid gap-6">
@@ -736,13 +736,13 @@ function StepResume({ resume, setResume, onSubmit }: any) {
         />
         <label 
           htmlFor="resume"
-          className="block p-20 rounded-[60px] border-2 border-dashed border-white/10 hover:border-[#c1ff72]/50 hover:bg-[#c1ff72]/5 transition-all cursor-pointer text-center group"
+          className="block p-10 md:p-20 rounded-[40px] md:rounded-[60px] border-2 border-dashed border-white/10 hover:border-[#c1ff72]/50 hover:bg-[#c1ff72]/5 transition-all cursor-pointer text-center group"
         >
-          <div className="w-20 h-20 rounded-3xl bg-[#c1ff72]/10 flex items-center justify-center mx-auto mb-8 group-hover:scale-110 transition-transform">
-            <CloudUpload className="w-10 h-10 text-[#c1ff72]" />
+          <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl md:rounded-3xl bg-[#c1ff72]/10 flex items-center justify-center mx-auto mb-6 md:mb-8 group-hover:scale-110 transition-transform">
+            <CloudUpload className="w-8 h-8 md:w-10 md:h-10 text-[#c1ff72]" />
           </div>
-          <h3 className="text-2xl font-bold mb-4">{resume ? resume.name : "Upload your Resume"}</h3>
-          <p className="text-white/30 text-sm font-jakarta">Support for PDF, DOCX (Max 5MB)</p>
+          <h3 className="text-xl md:text-2xl font-bold mb-4">{resume ? resume.name : "Upload your Resume"}</h3>
+          <p className="text-white/30 text-xs md:text-sm font-jakarta">Support for PDF, DOCX (Max 5MB)</p>
         </label>
       </div>
 

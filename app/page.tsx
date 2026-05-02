@@ -34,10 +34,10 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen relative">
       {/* Navigation - Capsule Style */}
-      <div className="fixed top-4 md:top-8 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-5xl">
-        <nav className="glass px-4 md:px-8 py-2 md:py-3 flex items-center justify-between rounded-full border border-white/10 shadow-[0_32px_64px_rgba(0,0,0,0.5)]">
+      <div className="fixed top-4 md:top-8 left-1/2 -translate-x-1/2 z-50 w-[90%] md:w-[95%] max-w-5xl">
+        <nav className="glass px-4 md:px-8 py-3 md:py-3 flex items-center justify-between rounded-full border border-white/10 shadow-[0_32px_64px_rgba(0,0,0,0.5)]">
           <div className="flex items-center">
-            <img src="/logo.svg" alt="Pathway Logo" className="h-6 md:h-8 w-auto object-contain" />
+            <img src="/logo.svg" alt="Pathway Logo" className="h-7 md:h-8 w-auto object-contain" />
           </div>
           <div className="hidden md:flex items-center gap-10 text-[11px] font-bold text-white/50 uppercase tracking-[0.25em] font-jakarta">
             <Link href="#matching" className="hover:text-[#c1ff72] transition-colors">Education</Link>
@@ -64,7 +64,7 @@ export default function LandingPage() {
                 Bypass the consultant. <br className="hidden md:block" />
                 Land your dream uni.
               </h1>
-              <p className="text-[#f6f6e9]/60 text-lg md:text-xl leading-relaxed mb-10 max-w-lg mx-auto lg:mx-0 font-jakarta">
+              <p className="text-[#f6f6e9]/60 text-lg md:text-xl leading-relaxed mb-4 md:mb-10 max-w-lg mx-auto lg:mx-0 font-jakarta">
                 The first autonomous AI engine designed for the Pakistani youth bulge. We match your profile to global programs and secure your future—completely for free.
               </p>
               <Link 
@@ -117,7 +117,7 @@ export default function LandingPage() {
         </section>
 
         {/* SECTION: Internship Module */}
-        <section id="internships" className="py-16 md:py-32 px-6 bg-[#c1ff72]/[0.02] border-y border-[#c1ff72]/5">
+        <section id="internships" className="py-10 md:py-32 px-6 bg-[#c1ff72]/[0.02] border-y border-[#c1ff72]/5">
           <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 md:gap-24 items-center">
              <div className="text-center lg:text-left">
               <span className="section-label mx-auto lg:mx-0">Global Career Placement</span>
@@ -125,10 +125,10 @@ export default function LandingPage() {
                 Market Match. <br />
                 Career Acceleration.
               </h2>
-              <p className="text-[#f6f6e9]/60 text-lg md:text-xl leading-relaxed mb-10 max-w-lg mx-auto lg:mx-0 font-jakarta">
+              <p className="text-[#f6f6e9]/60 text-lg md:text-xl leading-relaxed mb-4 md:mb-10 max-w-lg mx-auto lg:mx-0 font-jakarta">
                 Our AI aligns your hyper-specific academic trajectory with precise global market demands. Find internships at Fortune 500 companies that predict your learning gains.
               </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-10">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-4 md:mb-10">
                 <div className="glass p-6 rounded-2xl">
                   <Globe className="w-6 h-6 text-[#c1ff72] mb-4 mx-auto lg:mx-0" />
                   <h4 className="font-bold text-sm text-white mb-2">20+ Countries</h4>
@@ -142,8 +142,8 @@ export default function LandingPage() {
               </div>
             </div>
 
-            <div className="relative h-[450px] md:h-[500px] flex items-center justify-center scale-[0.9] md:scale-100">
-              <div className="glass p-6 md:p-8 rounded-[32px] w-full max-w-[440px] shadow-[0_40px_80px_rgba(0,0,0,0.4)] border-white/5">
+            <div className="relative h-[400px] md:h-[500px] flex items-center justify-center scale-[0.9] md:scale-100">
+              <div className="glass p-5 md:p-8 rounded-[32px] w-full max-w-[440px] shadow-[0_40px_80px_rgba(0,0,0,0.4)] border-white/5">
                 <p className="text-[#c1ff72] text-[10px] font-bold mb-6 uppercase tracking-widest text-center md:text-left">Active Internship Matches</p>
                 <div className="space-y-4">
                   {[
@@ -172,7 +172,7 @@ export default function LandingPage() {
         </section>
 
         {/* SECTION 3: Financial Aid */}
-        <section id="funding" className="py-16 md:py-32 px-6 border-b border-white/5">
+        <section id="funding" className="py-10 md:py-32 px-6 border-b border-white/5">
           <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 md:gap-24 items-center">
             <div className="order-2 lg:order-1 relative h-[450px] md:h-[500px] w-full flex items-center justify-center lg:justify-start scale-[0.85] md:scale-100">
               <div className="yellow-card w-[240px] h-[300px] md:w-[280px] md:h-[340px] absolute left-0 lg:-left-12 z-0 p-8 md:p-10 shadow-[0_40px_80px_rgba(0,0,0,0.5)] transform -rotate-6">
@@ -208,14 +208,14 @@ export default function LandingPage() {
               <h2 className="text-4xl md:text-7xl font-bold tracking-tight leading-[0.9] text-white mb-8">
                 Funding that <br /> skips the collateral.
               </h2>
-              <p className="text-[#f6f6e9]/60 text-lg md:text-xl leading-relaxed max-w-lg mx-auto lg:mx-0 mb-10 font-jakarta">
+              <p className="text-[#f6f6e9]/60 text-lg md:text-xl leading-relaxed max-w-lg mx-auto lg:mx-0 mb-3 md:mb-10 font-jakarta">
                 Bypass the cosigner barrier. We integrate with global fintech lenders who fund your degree based on where you're going, not where you're from.
               </p>
             </div>
           </div>
         </section>
         {/* SECTION: How it Works (Dual-Engine Architecture) */}
-        <section className="py-16 md:py-32 px-6 bg-[#061a12]">
+        <section className="py-10 md:py-32 px-6 bg-[#061a12]">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-12 md:mb-24">
               <span className="section-label mx-auto">The Architecture</span>
@@ -226,7 +226,7 @@ export default function LandingPage() {
 
             <div className="grid lg:grid-cols-2 gap-12">
               {/* Academic Module */}
-              <div className="glass p-10 md:p-14 rounded-[50px] border-white/5 relative overflow-hidden group">
+              <div className="glass p-6 md:p-14 rounded-[50px] border-white/5 relative overflow-hidden group">
                 <div className="absolute top-0 right-0 p-10">
                    <Globe className="w-12 h-12 text-[#c1ff72]/20" />
                 </div>
@@ -250,7 +250,7 @@ export default function LandingPage() {
               </div>
 
               {/* Career Module */}
-              <div className="glass p-10 md:p-14 rounded-[50px] border-[#ffe44d]/10 relative overflow-hidden group">
+              <div className="glass p-6 md:p-14 rounded-[50px] border-[#ffe44d]/10 relative overflow-hidden group">
                 <div className="absolute top-0 right-0 p-10">
                    <Briefcase className="w-12 h-12 text-[#ffe44d]/20" />
                 </div>
@@ -276,7 +276,7 @@ export default function LandingPage() {
           </div>
         </section>
         {/* SECTION: The Comparison (Pathway vs Legacy) */}
-        <section id="why-us" className="py-16 md:py-32 px-6 bg-[#061a12] border-t border-white/5">
+        <section id="why-us" className="py-10 md:py-32 px-6 bg-[#061a12] border-t border-white/5">
           <div className="max-w-7xl mx-auto text-center">
             <span className="section-label mx-auto">Market Disruption</span>
             <h2 className="text-4xl md:text-7xl font-light tracking-tight leading-[1.1] md:leading-[0.9] text-white mb-12 md:mb-20">
@@ -285,7 +285,7 @@ export default function LandingPage() {
 
             <div className="grid md:grid-cols-2 gap-8">
               {/* Legacy Column */}
-              <div className="bg-white/5 p-10 md:p-14 text-left border border-white/10 rounded-[48px] hover:bg-white/[0.07] transition-all">
+              <div className="bg-white/5 p-6 md:p-14 text-left border border-white/10 rounded-[48px] hover:bg-white/[0.07] transition-all">
                 <h3 className="text-white font-bold text-xl md:text-2xl mb-12 flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-red-500/10 flex items-center justify-center">
                     <span className="text-red-500 text-lg">✕</span>
@@ -308,11 +308,11 @@ export default function LandingPage() {
               </div>
 
               {/* Pathway Column */}
-              <div className="bg-[#c1ff72]/5 p-10 md:p-14 text-left border border-[#c1ff72]/20 rounded-[48px] relative overflow-hidden group hover:bg-[#c1ff72]/10 transition-all">
-                <div className="absolute top-0 right-0 p-8">
+              <div className="bg-[#c1ff72]/5 p-6 md:p-14 text-left border border-[#c1ff72]/20 rounded-[48px] relative overflow-hidden group hover:bg-[#c1ff72]/10 transition-all">
+                <div className="absolute top-4 right-4 md:top-0 md:right-0 md:p-8">
                    <div className="bg-[#c1ff72] text-[#061a12] px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-tighter">Recommended</div>
                 </div>
-                <h3 className="text-[#c1ff72] font-black text-xl md:text-2xl mb-12 flex items-center gap-3">
+                <h3 className="text-[#c1ff72] font-black text-xl md:text-2xl mb-8 md:mb-12 flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-[#c1ff72] flex items-center justify-center text-[#061a12] text-sm">
                     ✓
                   </div>
@@ -337,7 +337,7 @@ export default function LandingPage() {
         </section>
 
         {/* SECTION: Professional Case Study */}
-        <section className="py-16 md:py-32 px-6 overflow-hidden">
+        <section className="py-10 md:py-32 px-6 overflow-hidden">
           <div className="max-w-7xl mx-auto">
             <div className="bg-[#061a12] rounded-[40px] md:rounded-[60px] p-8 md:p-24 relative overflow-hidden border border-white/5 shadow-[0_80px_160px_rgba(0,0,0,0.8)]">
               {/* Background Accent */}
@@ -364,19 +364,25 @@ export default function LandingPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-6">
-                  {[
-                    { label: "Scholarship Secured", val: "$32,000", sub: "Annual Merit Grant" },
-                    { label: "Time Saved", val: "220h", sub: "Consultant Hours" },
-                    { label: "Visa Probability", val: "94%", sub: "Risk Assessment" },
-                    { label: "ROI Match", val: "High", sub: "Career Trajectory" }
-                  ].map((stat, i) => (
-                    <div key={i} className="glass p-8 rounded-[32px] border-white/5">
-                      <p className="text-[#c1ff72] text-4xl font-black tracking-tighter mb-2">{stat.val}</p>
-                      <p className="text-white font-bold text-sm mb-1">{stat.label}</p>
-                      <p className="text-white/20 text-[10px] font-bold uppercase tracking-widest">{stat.sub}</p>
-                    </div>
-                  ))}
+                <div className="glass p-1 md:p-8 rounded-[32px] border-white/5 overflow-hidden">
+                  <div className="flex flex-col">
+                    {[
+                      { label: "Scholarship Secured", val: "$32,000", sub: "Annual Merit Grant" },
+                      { label: "Time Saved", val: "220h", sub: "Consultant Hours" },
+                      { label: "Visa Probability", val: "94%", sub: "Risk Assessment" },
+                      { label: "ROI Match", val: "High", sub: "Career Trajectory" }
+                    ].map((stat, i) => (
+                      <div key={i} className={`p-6 md:p-8 ${i !== 3 ? 'border-b border-white/5' : ''}`}>
+                        <div className="flex items-center justify-between md:block">
+                          <p className="text-[#c1ff72] text-3xl md:text-4xl font-black tracking-tighter mb-0 md:mb-2">{stat.val}</p>
+                          <div className="text-right md:text-left">
+                            <p className="text-white font-bold text-xs md:text-sm mb-0 md:mb-1">{stat.label}</p>
+                            <p className="text-white/20 text-[8px] md:text-[10px] font-bold uppercase tracking-widest">{stat.sub}</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
@@ -384,7 +390,7 @@ export default function LandingPage() {
         </section>
 
         {/* SECTION: The Trust Layer (Institutional Grade Security) */}
-        <section className="py-16 md:py-32 px-6 border-y border-white/5 bg-[#061a12]">
+        <section className="py-10 md:py-32 px-6 border-y border-white/5 bg-[#061a12]">
           <div className="max-w-7xl mx-auto">
             <div className="grid lg:grid-cols-2 gap-24 items-center">
               <div>
@@ -415,7 +421,7 @@ export default function LandingPage() {
               </div>
 
               <div className="relative">
-                <div className="glass p-12 rounded-[60px] border-white/5 relative overflow-hidden group">
+                <div className="glass p-6 md:p-12 rounded-[40px] md:rounded-[60px] border-white/5 relative overflow-hidden group">
                   <div className="absolute inset-0 bg-[#c1ff72]/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                   
                   <div className="relative z-10 text-center">
@@ -443,7 +449,7 @@ export default function LandingPage() {
         </section>
 
         {/* SECTION: Interactive FAQ */}
-        <section id="faq" className="py-16 md:py-40 px-6 bg-white/[0.01]">
+        <section id="faq" className="py-10 md:py-40 px-6 bg-white/[0.01]">
           <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 md:gap-24">
             <div className="text-center lg:text-left">
               <span className="section-label mx-auto lg:mx-0">Expert Triage</span>
@@ -497,10 +503,10 @@ export default function LandingPage() {
       <footer className="bg-[#061a12] pt-20 md:pt-40 pb-12 md:pb-20 border-t border-white/5 px-6">
         <div className="max-w-7xl mx-auto">
           {/* Top Branding Section */}
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-32 gap-12 text-left">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-32 gap-12 text-left">
             <div className="max-w-2xl">
-              <img src="/logo.svg" alt="Pathway Logo" className="h-20 md:h-28 w-auto mb-10 -ml-2" />
-              <h2 className="text-4xl md:text-6xl font-bold text-white tracking-tight leading-[1.1] md:leading-[0.9]">
+              <img src="/logo.svg" alt="Pathway Logo" className="h-16 md:h-28 w-auto mb-6 md:mb-10 -ml-2" />
+              <h2 className="text-3xl md:text-6xl font-bold text-white tracking-tight leading-[1.1] md:leading-[0.9]">
                 The first autonomous <br /> AI Student Copilot.
               </h2>
             </div>
@@ -513,7 +519,7 @@ export default function LandingPage() {
           </div>
 
           {/* Links Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 mb-32 border-t border-white/5 pt-20 text-left">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 mb-12 md:mb-32 border-t border-white/5 pt-12 md:pt-20 text-left">
             <div>
               <h4 className="text-white font-bold uppercase text-[10px] tracking-[0.3em] mb-8">Platform</h4>
               <ul className="space-y-4 text-white/40 font-bold text-sm">
