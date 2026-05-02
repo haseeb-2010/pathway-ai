@@ -591,9 +591,9 @@ export default function LandingPage() {
               © 2026 Pathway AI. Designed for the global student exodus.
             </p>
             <div className="flex gap-10 text-[10px] text-white/10 font-bold uppercase tracking-[0.2em]">
-              <Link href="#" className="hover:text-white transition-colors">Privacy Policy</Link>
-              <Link href="#" className="hover:text-white transition-colors">Terms of Service</Link>
-              <Link href="#" className="hover:text-white transition-colors">Cookie Policy</Link>
+              <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
+              <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
+              <Link href="/cookies" className="hover:text-white transition-colors">Cookie Policy</Link>
             </div>
           </div>
         </div>
