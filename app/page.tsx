@@ -568,10 +568,10 @@ export default function LandingPage() {
             <div>
               <h4 className="text-white font-bold uppercase text-[10px] tracking-[0.3em] mb-8">Company</h4>
               <ul className="space-y-4 text-white/40 font-bold text-sm">
-                <li><Link href="#" className="hover:text-[#c1ff72] transition-colors">About Pathway</Link></li>
-                <li><Link href="#" className="hover:text-[#c1ff72] transition-colors">Mission</Link></li>
-                <li><Link href="#" className="hover:text-[#c1ff72] transition-colors">Careers</Link></li>
-                <li><Link href="#" className="hover:text-[#c1ff72] transition-colors">Press</Link></li>
+                <li><Link href="/about" className="hover:text-[#c1ff72] transition-colors">About Pathway</Link></li>
+                <li><Link href="/mission" className="hover:text-[#c1ff72] transition-colors">Mission</Link></li>
+                <li><Link href="/problem" className="hover:text-[#c1ff72] transition-colors">The Problem</Link></li>
+                <li><Link href="/careers" className="hover:text-[#c1ff72] transition-colors">Careers</Link></li>
               </ul>
             </div>
             <div>
