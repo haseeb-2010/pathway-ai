@@ -1,5 +1,12 @@
+
 import { NextResponse } from "next/server";
 import { supabase, supabaseMatching } from "@/lib/supabase";
+import OpenAI from "openai";
+
+const openai = new OpenAI({
+  apiKey: process.env.NVIDIA_API_KEY,
+  baseURL: "https://integrate.api.nvidia.com/v1",
+});
 
 export async function POST(req: Request) {
   try {
@@ -38,7 +45,7 @@ export async function POST(req: Request) {
       console.warn("Could not fetch university data from matching DB, falling back to LLM knowledge.");
     }
 
-    // 2. Prepare the Context for NVIDIA LLM
+    // 2. Prepare the Context for LLM
     const studentContext = `
       Name: ${profile?.full_name}
       Current Location: ${profile?.location}
@@ -56,52 +63,46 @@ export async function POST(req: Request) {
       ${JSON.stringify(universityData)}
     `;
 
-    // 3. Call NVIDIA NIM API
-    const response = await fetch("https://integrate.api.nvidia.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${process.env.NVIDIA_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "qwen/qwen3-next-80b-a3b-thinking",
-        messages: [
+    // 3. Call LLM
+    const completion = await openai.chat.completions.create({
+      model: "meta/llama-3.3-70b-instruct",
+      messages: [
+        {
+          role: "system",
+          content: "You are an expert academic advisor for international students from Pakistan. Your goal is to provide high-fidelity university matches and SOP structures based on student profiles. Return only JSON."
+        },
+        {
+          role: "user",
+          content: `Based on this student profile and their target preferences, please provide:
+          1. A list of 3 recommended universities with match percentages and why they fit.
+          2. A structural outline for their Statement of Purpose (SOP).
+          
+          Return the response in JSON format:
           {
-            role: "system",
-            content: "You are an expert academic advisor for international students from Pakistan. Your goal is to provide high-fidelity university matches and SOP structures based on student profiles. Be precise, encouraging, and data-driven."
-          },
-          {
-            role: "user",
-            content: `Based on this student profile and their target preferences, please provide:
-            1. A list of 3 recommended universities with match percentages and why they fit.
-            2. A structural outline for their Statement of Purpose (SOP).
-            
-            Return the response in JSON format:
-            {
-              "matches": [
-                { "name": "...", "location": "...", "match_strength": "...", "why": "...", "highlight": "..." }
-              ],
-              "sop_outline": [
-                { "section": "...", "points": ["...", "..."] }
-              ]
-            }
-            
-            Profile Context:
-            ${studentContext}`
+            "matches": [
+              { "name": "...", "location": "...", "match_strength": "...", "why": "...", "highlight": "..." }
+            ],
+            "sop_outline": [
+              { "section": "...", "points": ["...", "..."] }
+            ]
           }
-        ],
-        temperature: 0.6,
-        max_tokens: 4096,
-        stream: false
-      }),
+          
+          Profile Context:
+          ${studentContext}`
+        }
+      ],
+      temperature: 0.6,
+      max_tokens: 4096,
     });
 
-    const aiResponse = await response.json();
-    const content = aiResponse.choices[0].message.content;
+    const content = completion.choices[0].message.content || "{}";
 
     // Parse the JSON from the LLM response (handling potential markdown blocks)
-    const jsonString = content.replace(/```json|```/g, "").trim();
-    const data = JSON.parse(jsonString);
+    const jsonMatch = content.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new Error("AI failed to return valid JSON: " + content);
+    }
+    const data = JSON.parse(jsonMatch[0]);
 
     return NextResponse.json(data);
 

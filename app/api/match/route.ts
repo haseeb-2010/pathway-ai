@@ -1,6 +1,12 @@
 
 import { NextResponse } from "next/server";
 import { supabase, supabaseMatching } from "@/lib/supabase";
+import OpenAI from "openai";
+
+const openai = new OpenAI({
+  apiKey: process.env.NVIDIA_API_KEY,
+  baseURL: "https://integrate.api.nvidia.com/v1",
+});
 
 export async function POST(req: Request) {
   try {
@@ -30,61 +36,53 @@ export async function POST(req: Request) {
       .limit(50); // Get a good sample to filter
 
     // 3. Use NVIDIA LLM to match
-    const response = await fetch("https://integrate.api.nvidia.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${process.env.NVIDIA_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "nvidia/llama-3.1-70b-instruct",
-        messages: [
+    const completion = await openai.chat.completions.create({
+      model: "meta/llama-3.3-70b-instruct",
+      messages: [
+        {
+          role: "system",
+          content: "You are the Pathway AI Matching Engine. Your job is to analyze a student's profile and a list of internships to find the best matches. Return only JSON."
+        },
+        {
+          role: "user",
+          content: `
+          Student Profile:
+          - Full Name: ${profile?.full_name}
+          - Location: ${profile?.location}
+          - Education: ${JSON.stringify(education)}
+          - Experience: ${JSON.stringify(experience)}
+          - Skills: ${JSON.stringify(skills?.map((s: any) => s.skill_name))}
+
+          Internship List:
+          ${JSON.stringify(internships)}
+
+          Task:
+          1. Select the top 6 internships that best match this student's skills and background.
+          2. For each, calculate a 'match_score' (percentage).
+          3. Provide a brief explanation of why it fits.
+
+          Return JSON format:
           {
-            role: "system",
-            content: "You are the Pathway AI Matching Engine. Your job is to analyze a student's profile and a list of internships to find the best matches. Return only JSON."
-          },
-          {
-            role: "user",
-            content: `
-            Student Profile:
-            - Full Name: ${profile?.full_name}
-            - Location: ${profile?.location}
-            - Education: ${JSON.stringify(education)}
-            - Experience: ${JSON.stringify(experience)}
-            - Skills: ${JSON.stringify(skills?.map((s: any) => s.skill_name))}
-
-            Internship List:
-            ${JSON.stringify(internships)}
-
-            Task:
-            1. Select the top 6 internships that best match this student's skills and background.
-            2. For each, calculate a 'match_score' (percentage).
-            3. Provide a brief explanation of why it fits.
-
-            Return JSON format:
-            {
-              "matches": [
-                {
-                  "id": "...",
-                  "role": "...",
-                  "company": "...",
-                  "location": "...",
-                  "description": "...",
-                  "match_score": 95,
-                  "why": "...",
-                  "apply_link": "..."
-                }
-              ]
-            }
-            `
+            "matches": [
+              {
+                "id": "...",
+                "role": "...",
+                "company": "...",
+                "location": "...",
+                "description": "...",
+                "match_score": 95,
+                "why": "...",
+                "apply_link": "..."
+              }
+            ]
           }
-        ],
-        temperature: 0.1,
-      }),
+          `
+        }
+      ],
+      temperature: 0.1,
     });
 
-    const aiResponse = await response.json();
-    const content = aiResponse.choices[0].message.content;
+    const content = completion.choices[0].message.content || "{}";
     
     // Robust JSON extraction
     const jsonMatch = content.match(/\{[\s\S]*\}/);
