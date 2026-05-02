@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, CheckCircle2, Search, Briefcase, Globe, TrendingUp } from "lucide-react";
+import { ArrowRight, CheckCircle2, Search, Briefcase, Globe, TrendingUp, Plus } from "lucide-react";
 
 const faqs = [
   {
