@@ -287,7 +287,7 @@ export default function OnboardingPage() {
               const password = formData.get('password') as string;
               
               if (authMode === 'signin') {
-                const { error } = await supabase.auth.signInWithPassword({ email, password });
+                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
                 if (error) {
                   if (error.message.includes("Invalid login credentials")) {
                     setAuthError("Wrong password or account not found. Are you new? Try Signing Up.");
@@ -295,6 +295,17 @@ export default function OnboardingPage() {
                     setAuthError("Please check your email and click the confirmation link before signing in.");
                   } else {
                     setAuthError(error.message);
+                  }
+                } else if (data.user) {
+                  // Explicit check for immediate redirect
+                  const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('onboarding_completed')
+                    .eq('id', data.user.id)
+                    .single();
+                  
+                  if (profile?.onboarding_completed) {
+                    router.push('/dashboard');
                   }
                 }
               } else if (authMode === 'signup') {
