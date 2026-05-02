@@ -41,12 +41,12 @@ export default function InternshipsPage() {
   return (
     <div className="space-y-8 pb-20">
       {/* Tabs Header */}
-      <div className="flex items-center gap-2 p-1.5 bg-white/5 rounded-2xl w-fit border border-white/5">
+      <div className="flex items-center gap-2 p-1.5 bg-white/5 rounded-2xl w-full md:w-fit border border-white/5 overflow-x-auto scrollbar-hide">
         {(['Dashboard', 'Tracker', 'Opportunities', 'Interview Practice'] as Tab[]).map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`px-6 py-3 rounded-xl text-xs font-bold transition-all uppercase tracking-widest ${
+            className={`px-6 py-3 rounded-xl text-xs font-bold transition-all uppercase tracking-widest shrink-0 ${
               activeTab === tab 
               ? "bg-[#c1ff72] text-[#061a12] shadow-lg shadow-[#c1ff72]/10" 
               : "text-white/40 hover:text-white/60"

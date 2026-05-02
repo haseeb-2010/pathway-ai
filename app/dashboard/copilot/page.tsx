@@ -13,7 +13,8 @@ import {
   CheckCircle2,
   FileText,
   ChevronRight,
-  Loader2
+  Loader2,
+  Target
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useEffect } from "react";
@@ -73,16 +74,16 @@ export default function CopilotPage() {
   return (
     <div className="space-y-12">
       {/* Header Navigation */}
-      <div className="flex bg-white/5 p-1 rounded-2xl w-fit">
+      <div className="flex bg-white/5 p-1 rounded-2xl w-full md:w-fit overflow-x-auto scrollbar-hide border border-white/5">
         {[
           { id: 'preferences', label: 'Matcher Preferences', icon: Filter },
-          { id: 'matching', label: 'University Matches', icon: TargetIcon },
-          { id: 'sop', label: 'SOP Assistant', icon: FileTextIcon },
+          { id: 'matching', label: 'University Matches', icon: Target },
+          { id: 'sop', label: 'SOP Assistant', icon: FileText },
         ].map((item) => (
           <button
             key={item.id}
             onClick={() => setView(item.id as any)}
-            className={`flex items-center gap-2 px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${
+            className={`flex items-center gap-2 px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-widest transition-all shrink-0 ${
               view === item.id 
               ? "bg-[#c1ff72] text-[#061a12] shadow-lg" 
               : "text-white/40 hover:text-white"
