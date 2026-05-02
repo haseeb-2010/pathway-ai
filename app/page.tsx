@@ -100,7 +100,7 @@ export default function LandingPage() {
                 Land your dream uni.
               </h1>
               <h2 className="sr-only text-0">Autonomous AI for Students</h2>
-              <p className="text-[#f6f6e9]/60 text-lg md:text-xl leading-relaxed mb-2 md:mb-10 max-w-lg mx-auto lg:mx-0 font-jakarta">
+              <p className="text-[#f6f6e9]/60 text-lg md:text-xl leading-relaxed mb-8 md:mb-10 max-w-lg mx-auto lg:mx-0 font-jakarta">
                 The first autonomous AI engine designed for the Pakistani youth bulge. We match your profile to global programs and secure your future—completely for free.
               </p>
               <Link 
