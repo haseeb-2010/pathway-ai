@@ -59,7 +59,7 @@ export default function LandingPage() {
       <div className="fixed top-4 md:top-8 left-1/2 -translate-x-1/2 z-50 w-[85%] md:w-[95%] max-w-5xl">
         <nav className="glass px-3 md:px-8 py-1.5 md:py-3 flex items-center justify-between rounded-full border border-white/10 shadow-[0_32px_64px_rgba(0,0,0,0.5)]">
           <div className="flex items-center shrink-0">
-            <img src="/logo.svg" alt="Pathway Logo" className="h-8 md:h-12 w-auto object-contain -ml-2 md:-ml-4 scale-125" />
+            <img src="/logo.svg" alt="Pathway Logo" className="h-8 md:h-12 w-auto object-contain ml-2 md:-ml-4 scale-125" />
           </div>
           <div className="hidden md:flex items-center gap-10 text-[11px] font-bold text-white/50 uppercase tracking-[0.25em] font-jakarta">
             <Link href="#matching" className="hover:text-[#c1ff72] transition-colors">Education</Link>

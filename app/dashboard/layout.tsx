@@ -63,7 +63,7 @@ export default function DashboardLayout({
       <header className="h-20 border-b border-white/5 bg-[#061a12]/80 backdrop-blur-xl flex items-center justify-between px-6 md:px-12 shrink-0 z-50">
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center shrink-0">
-            <img src="/logo.svg" alt="Pathway Logo" className="h-12 md:h-16 w-auto object-contain -ml-6 md:-ml-10 scale-125 origin-left" />
+            <img src="/logo.svg" alt="Pathway Logo" className="h-12 md:h-16 w-auto object-contain ml-2 md:-ml-10 scale-125 origin-left" />
           </Link>
         </div>
 
