@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 type Education = {
   institution: string;
@@ -57,6 +58,7 @@ export default function OnboardingPage() {
   const [step, setStep] = useState(1);
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   // Form State
   const [personal, setPersonal] = useState({
@@ -76,18 +78,160 @@ export default function OnboardingPage() {
   const [isAchievementModalOpen, setIsAchievementModalOpen] = useState(false);
 
   useEffect(() => {
+    const checkProfile = async (session: any) => {
+      if (session?.user) {
+        // 1. Check if onboarding is completed
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', session.user.id)
+          .single();
+        
+        if (profile?.onboarding_completed) {
+          router.push('/dashboard');
+          return;
+        }
+
+        // 2. Load existing data if any
+        if (profile) {
+          setPersonal({
+            fullName: profile.full_name || "",
+            phone: profile.phone || "",
+            location: profile.location || ""
+          });
+        }
+
+        const [
+          { data: eduData },
+          { data: expData },
+          { data: skillsData },
+          { data: certsData },
+          { data: achData }
+        ] = await Promise.all([
+          supabase.from('education').select('*').eq('profile_id', session.user.id),
+          supabase.from('experience').select('*').eq('profile_id', session.user.id),
+          supabase.from('skills').select('*').eq('profile_id', session.user.id),
+          supabase.from('certificates').select('*').eq('profile_id', session.user.id),
+          supabase.from('achievements').select('*').eq('profile_id', session.user.id),
+        ]);
+
+        if (eduData) setEducation(eduData as any);
+        if (expData) setExperience(expData as any);
+        if (skillsData) setSkills(skillsData.map(s => s.name));
+        if (certsData) setCerts(certsData.map(c => ({ name: c.name, issuer: c.issuer, id: c.certificate_id, date: "" })));
+        if (achData) setAchievements(achData as any);
+      }
+    };
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user || null);
+      if (session?.user) {
+        checkProfile(session);
+      }
       setLoading(false);
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [router]);
 
-  const nextStep = () => setStep(s => Math.min(s + 1, 6));
+  const saveCurrentStepData = async (targetStep: number) => {
+    if (!user) return;
+    
+    try {
+      if (targetStep === 1) {
+        await supabase.from('profiles').upsert({
+          id: user.id,
+          full_name: personal.fullName,
+          phone: personal.phone,
+          location: personal.location,
+          updated_at: new Date().toISOString()
+        });
+      } else if (targetStep === 2) {
+        // Simple strategy: Clear and re-insert for education/experience/skills
+        // This is safer for partial updates during onboarding
+        await supabase.from('education').delete().eq('profile_id', user.id);
+        if (education.length > 0) {
+          await supabase.from('education').insert(education.map(e => ({ ...e, profile_id: user.id })));
+        }
+        await supabase.from('experience').delete().eq('profile_id', user.id);
+        if (experience.length > 0) {
+          await supabase.from('experience').insert(experience.map(e => ({ ...e, profile_id: user.id })));
+        }
+      } else if (targetStep === 3) {
+        await supabase.from('skills').delete().eq('profile_id', user.id);
+        if (skills.length > 0) {
+          await supabase.from('skills').insert(skills.map(s => ({ name: s, profile_id: user.id })));
+        }
+      } else if (targetStep === 4) {
+        await supabase.from('certificates').delete().eq('profile_id', user.id);
+        if (certs.length > 0) {
+          await supabase.from('certificates').insert(certs.map(c => ({ 
+            profile_id: user.id, 
+            name: c.name, 
+            issuer: c.issuer, 
+            certificate_id: c.id 
+          })));
+        }
+      } else if (targetStep === 5) {
+        await supabase.from('achievements').delete().eq('profile_id', user.id);
+        if (achievements.length > 0) {
+          await supabase.from('achievements').insert(achievements.map(a => ({ ...a, profile_id: user.id })));
+        }
+      }
+    } catch (error) {
+      console.error("Error auto-saving step:", error);
+    }
+  };
+
+  const validateStep = () => {
+    if (step === 1) {
+      if (!personal.fullName || !personal.phone || !personal.location) {
+        alert("Please fill in all identification fields to proceed.");
+        return false;
+      }
+    } else if (step === 2) {
+      if (education.length === 0 || !education[0].institution || !education[0].degree) {
+        alert("Please add at least one recent academic qualification.");
+        return false;
+      }
+    }
+    return true;
+  };
+
+  const nextStep = async () => {
+    if (!validateStep()) return;
+    await saveCurrentStepData(step);
+    setStep(s => Math.min(s + 1, 6));
+  };
+
   const prevStep = () => setStep(s => Math.max(s - 1, 1));
 
   const progress = (step / 6) * 100;
+
+  const [authMode, setAuthMode] = useState<'signin' | 'signup' | 'forgot'>('signin');
+  const [authError, setAuthError] = useState<string | null>(null);
+
+  const handleSubmit = async () => {
+    if (!user) return;
+    if (!validateStep()) return;
+    setLoading(true);
+
+    try {
+      await saveCurrentStepData(step);
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .update({ onboarding_completed: true })
+        .eq('id', user.id);
+      
+      if (profileError) throw profileError;
+      router.push('/dashboard');
+    } catch (error: any) {
+      console.error("Error completing onboarding:", error);
+      alert("Error saving profile: " + error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const [authMode, setAuthMode] = useState<'signin' | 'signup' | 'forgot'>('signin');
   const [authError, setAuthError] = useState<string | null>(null);
@@ -224,7 +368,7 @@ export default function OnboardingPage() {
       <header className="fixed top-0 left-0 w-full z-50 bg-[#061a12]/80 backdrop-blur-xl border-b border-white/5 px-4 md:px-6 py-3 md:py-4">
         <div className="max-w-5xl mx-auto flex items-center justify-between gap-4">
           <Link href="/" className="shrink-0">
-            <img src="/logo.svg" alt="Pathway Logo" className="h-6 md:h-8" />
+            <img src="/logo.svg" alt="Pathway Logo" className="h-8 md:h-10" />
           </Link>
           <div className="flex-1 max-w-md">
             <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
@@ -259,7 +403,7 @@ export default function OnboardingPage() {
               {step === 3 && <StepSkills skills={skills} setSkills={setSkills} onNext={nextStep} onPrev={prevStep} />}
               {step === 4 && <StepCertificates certs={certs} setCerts={setCerts} onNext={nextStep} onPrev={prevStep} />}
               {step === 5 && <StepAchievements achievements={achievements} setAchievements={setAchievements} onNext={nextStep} onPrev={prevStep} />}
-              {step === 6 && <StepResume resume={resume} setResume={setResume} onSubmit={() => {}} onPrev={prevStep} />}
+              {step === 6 && <StepResume resume={resume} setResume={setResume} onSubmit={handleSubmit} onPrev={prevStep} />}
             </motion.div>
           </AnimatePresence>
         </div>
@@ -286,7 +430,7 @@ export default function OnboardingPage() {
             </button>
           ) : (
             <button 
-              onClick={() => {}}
+              onClick={handleSubmit}
               className="bg-[#ffe44d] text-[#061a12] px-8 md:px-12 py-3 md:py-4 rounded-xl md:rounded-2xl font-bold flex items-center gap-2 md:gap-3 hover:scale-105 active:scale-95 transition-all shadow-[0_20px_40px_rgba(255,228,77,0.2)] uppercase tracking-widest text-[10px] md:text-xs"
             >
               Complete <Check className="w-4 h-4" />
@@ -504,9 +648,9 @@ function StepSkills({ skills, setSkills }: any) {
           />
           <button 
             onClick={() => addSkill(input)}
-            className="bg-[#c1ff72] text-[#061a12] px-8 rounded-3xl font-bold flex items-center justify-center hover:scale-105 transition-all"
+            className="bg-[#c1ff72] text-[#061a12] px-6 md:px-8 rounded-3xl font-bold flex items-center justify-center hover:scale-105 active:scale-95 transition-all shrink-0"
           >
-            <Plus className="w-6 h-6" />
+            <Plus className="w-5 h-5 md:w-6 md:h-6" />
           </button>
         </div>
 

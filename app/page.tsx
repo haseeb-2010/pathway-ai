@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, CheckCircle2, Search, Briefcase, Globe, TrendingUp, Plus } from "lucide-react";
+import { ArrowRight, CheckCircle2, Search, Briefcase, Globe, TrendingUp, Plus, ChevronDown } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
 const faqs = [
   {
@@ -30,6 +32,26 @@ const faqs = [
 
 export default function LandingPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [startLink, setStartLink] = useState("/onboarding");
+  const router = useRouter();
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('onboarding_completed')
+          .eq('id', session.user.id)
+          .single();
+        
+        if (profile?.onboarding_completed) {
+          setStartLink("/dashboard");
+        }
+      }
+    };
+    checkUser();
+  }, []);
 
   return (
     <div className="min-h-screen relative overflow-x-hidden bg-[#061a12]">
@@ -37,7 +59,7 @@ export default function LandingPage() {
       <div className="fixed top-4 md:top-8 left-1/2 -translate-x-1/2 z-50 w-[85%] md:w-[95%] max-w-5xl">
         <nav className="glass px-3 md:px-8 py-3 flex items-center justify-between rounded-full border border-white/10 shadow-[0_32px_64px_rgba(0,0,0,0.5)]">
           <div className="flex items-center shrink-0">
-            <img src="/logo.svg" alt="Pathway Logo" className="h-10 md:h-8 w-auto object-contain" />
+            <img src="/logo.svg" alt="Pathway Logo" className="h-12 md:h-12 w-auto object-contain" />
           </div>
           <div className="hidden md:flex items-center gap-10 text-[11px] font-bold text-white/50 uppercase tracking-[0.25em] font-jakarta">
             <Link href="#matching" className="hover:text-[#c1ff72] transition-colors">Education</Link>
@@ -46,7 +68,7 @@ export default function LandingPage() {
             <Link href="#faq" className="hover:text-[#c1ff72] transition-colors">FAQs</Link>
           </div>
           <Link 
-            href="/onboarding"
+            href={startLink}
             className="bg-[#c1ff72] hover:bg-[#c1ff72]/90 text-[#061a12] px-2 md:px-6 py-1.5 md:py-2.5 rounded-xl font-bold text-[8px] md:text-xs transition-all flex items-center gap-1 md:gap-2 uppercase tracking-widest active:scale-95 shrink-0"
           >
             Get Started <ArrowRight className="w-3 h-3 md:w-4 md:h-4" />
@@ -62,9 +84,9 @@ export default function LandingPage() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           viewport={{ once: true, margin: "-10% 0px -10% 0px" }}
-          className="py-12 md:py-16 px-6 will-change-transform will-change-opacity"
+          className="py-10 md:py-16 px-6 will-change-transform will-change-opacity"
         >
-          <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-4 md:gap-24 items-center">
+          <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-2 md:gap-24 items-center">
             <motion.div 
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -77,11 +99,12 @@ export default function LandingPage() {
                 Bypass the consultant. <br className="hidden md:block" />
                 Land your dream uni.
               </h1>
+              <h2 className="sr-only text-0">Autonomous AI for Students</h2>
               <p className="text-[#f6f6e9]/60 text-lg md:text-xl leading-relaxed mb-2 md:mb-10 max-w-lg mx-auto lg:mx-0 font-jakarta">
                 The first autonomous AI engine designed for the Pakistani youth bulge. We match your profile to global programs and secure your future—completely for free.
               </p>
               <Link 
-                href="/onboarding"
+                href={startLink}
                 className="bg-[#f6f6e9] text-[#061a12] px-10 py-5 rounded-2xl font-bold text-lg hover:scale-105 transition-all inline-flex items-center gap-3 w-full md:w-auto justify-center"
               >
                 Start My Journey <ArrowRight className="w-6 h-6" />
@@ -124,7 +147,7 @@ export default function LandingPage() {
               <motion.div 
                 initial={{ opacity: 0, x: 50, rotate: 0 }}
                 whileInView={{ opacity: 1, x: 0, rotate: 12 }}
-                transition={{ duration: 1, delay: 0.6 }}
+                transition={{ duration: 1, delay: 0.4 }}
                 viewport={{ once: true }}
                 className="yellow-card w-[200px] h-[200px] md:w-[240px] md:h-[240px] absolute -bottom-6 right-0 md:right-0 lg:-right-10 shadow-[0_40px_80px_rgba(0,0,0,0.6)] border-4 border-[#061a12]"
               >
@@ -324,7 +347,7 @@ export default function LandingPage() {
                     { step: "SOP Architecture", desc: "Collaborate with our AI to elicit your unique narrative for an Ivy-standard SOP." }
                   ].map((item, i) => (
                     <div key={i} className="relative pl-10">
-                      <div className="absolute left-0 top-1.5 w-2 h-2 rounded-full bg-[#c1ff72]" />
+                      <div className="absolute left-0 top-1.5 p-0 w-2 h-2 rounded-full bg-[#c1ff72]" />
                       <h4 className="text-white font-bold text-lg mb-2">{item.step}</h4>
                       <p className="text-white/30 text-sm leading-relaxed">{item.desc}</p>
                     </div>
@@ -355,7 +378,7 @@ export default function LandingPage() {
                       viewport={{ once: true }}
                       className="relative pl-10"
                     >
-                      <div className="absolute left-0 top-1.5 w-2 h-2 rounded-full bg-[#ffe44d]" />
+                      <div className="absolute left-0 top-1.5 p-0 w-2 h-2 rounded-full bg-[#ffe44d]" />
                       <h4 className="text-white font-bold text-lg mb-2">{item.step}</h4>
                       <p className="text-white/30 text-sm leading-relaxed">{item.desc}</p>
                     </motion.div>
@@ -446,137 +469,6 @@ export default function LandingPage() {
           </div>
         </motion.section>
 
-        {/* SECTION: Professional Case Study */}
-        <motion.section 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          viewport={{ once: true, margin: "-10% 0px -10% 0px" }}
-          className="py-10 md:py-32 px-6 overflow-hidden will-change-transform will-change-opacity"
-        >
-          <div className="max-w-7xl mx-auto">
-            <div className="bg-[#061a12] rounded-[32px] md:rounded-[60px] p-4 md:p-24 relative overflow-hidden border border-white/5 shadow-[0_80px_160px_rgba(0,0,0,0.8)]">
-              {/* Background Accent */}
-              <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-[#c1ff72]/5 to-transparent" />
-              
-              <div className="relative z-10 grid lg:grid-cols-2 gap-8 md:gap-20 items-center">
-                <div>
-                  <span className="bg-[#c1ff72] text-[#061a12] px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-6 md:mb-10 inline-block">Impact Study 01</span>
-                  <h2 className="text-3xl md:text-6xl font-bold text-white tracking-tight leading-[1.1] md:leading-[0.9] mb-6 md:mb-8">
-                    From Lahore to <br /> Munich in 45 days.
-                  </h2>
-                  <p className="text-white/50 text-sm md:text-xl leading-relaxed mb-6 md:mb-12 font-jakarta italic">
-                    "I had the grades but zero direction. Legacy consultants only wanted to send me to their partners. Pathway matched me to TU Munich based on my specific major and secured my funding in weeks."
-                  </p>
-                  
-                  <div className="flex items-center gap-4 md:gap-6">
-                    <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-[#c1ff72]/20 border border-[#c1ff72]/30 overflow-hidden">
-                      <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Ahmed" alt="Ahmed" />
-                    </div>
-                    <div>
-                      <p className="text-white font-bold text-base md:text-lg">Ahmed R.</p>
-                      <p className="text-white/30 text-[10px] md:text-sm font-bold uppercase tracking-widest">M.Sc Computer Science, TU Munich</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="glass p-1 md:p-8 rounded-[32px] border-white/5 overflow-hidden">
-                  <div className="flex flex-col">
-                    {[
-                      { label: "Scholarship Secured", val: "$32,000", sub: "Annual Merit Grant" },
-                      { label: "Time Saved", val: "220h", sub: "Consultant Hours" },
-                      { label: "Visa Probability", val: "94%", sub: "Risk Assessment" },
-                      { label: "ROI Match", val: "High", sub: "Career Trajectory" }
-                    ].map((stat, i) => (
-                      <motion.div 
-                        key={i} 
-                        initial={{ opacity: 0, y: 10 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: 0.3 + (i * 0.1) }}
-                        viewport={{ once: true }}
-                        className={`p-4 md:p-8 ${i !== 3 ? 'border-b border-white/5' : ''}`}
-                      >
-                        <div className="flex flex-col items-start md:block">
-                          <p className="text-[#c1ff72] text-3xl md:text-4xl font-black tracking-tighter mb-1 md:mb-2">{stat.val}</p>
-                          <div className="text-left">
-                            <p className="text-white font-bold text-xs md:text-sm mb-0.5 md:mb-1">{stat.label}</p>
-                            <p className="text-white/20 text-[8px] md:text-[10px] font-bold uppercase tracking-widest">{stat.sub}</p>
-                          </div>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </motion.section>
-
-        {/* SECTION: The Trust Layer (Institutional Grade Security) */}
-        <motion.section 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          viewport={{ once: true, margin: "-10% 0px -10% 0px" }}
-          className="py-10 md:py-32 px-6 border-y border-white/5 bg-[#061a12] overflow-hidden will-change-transform will-change-opacity"
-        >
-          <div className="max-w-7xl mx-auto">
-            <div className="grid lg:grid-cols-2 gap-24 items-center">
-              <div>
-                <span className="section-label">Enterprise Security</span>
-                <h2 className="text-4xl md:text-7xl font-bold tracking-tight leading-[1.1] md:leading-[0.9] text-white mb-8 md:mb-10">
-                  Built for Security. <br />
-                  Scaled for Trust.
-                </h2>
-                <p className="text-white/40 text-xl leading-relaxed mb-12 font-jakarta">
-                  Pathway AI is more than a copilot—it's an institutional-grade infrastructure designed to protect student data and ensure 100% regulatory compliance in international education.
-                </p>
-                
-                <div className="space-y-8">
-                  {[
-                    { title: "Data Sovereignty", desc: "Military-grade encryption for all student profiles and documentation." },
-                    { title: "Expert Triage", desc: "Automated hand-off to OMARA/OISC-certified legal advisors for high-stakes cases." },
-                    { title: "Live Intelligence", desc: "Direct API integration with global immigration and embassy traffic-light systems." }
-                  ].map((item, i) => (
-                    <div key={i} className="flex gap-6 items-start">
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#c1ff72] mt-2.5 shrink-0" />
-                      <div>
-                        <h4 className="text-white font-bold text-lg mb-2">{item.title}</h4>
-                        <p className="text-white/30 text-sm leading-relaxed">{item.desc}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="relative">
-                <div className="glass p-4 md:p-12 rounded-[32px] md:rounded-[60px] border-white/5 relative overflow-hidden group">
-                  <div className="absolute inset-0 bg-[#c1ff72]/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  
-                  <div className="relative z-10 text-center">
-                    <div className="w-16 h-16 md:w-24 md:h-24 rounded-2xl md:rounded-3xl bg-[#c1ff72]/20 flex items-center justify-center mx-auto mb-6 md:mb-10">
-                       <CheckCircle2 className="w-8 h-8 md:w-12 md:h-12 text-[#c1ff72]" />
-                    </div>
-                    <h3 className="text-white font-bold text-2xl md:text-3xl mb-4 md:mb-6">Security Certified</h3>
-                    <p className="text-white/30 text-xs md:text-sm mb-6 md:mb-10 font-jakarta px-4">Operating under the highest global standards for international student data management.</p>
-                    
-                    <div className="grid grid-cols-2 gap-3 md:gap-4">
-                       <div className="bg-white/5 px-4 md:px-6 py-3 md:py-4 rounded-xl md:rounded-2xl text-[8px] md:text-[10px] font-bold text-white/40 uppercase tracking-widest border border-white/5">GDPR Compliant</div>
-                       <div className="bg-white/5 px-4 md:px-6 py-3 md:py-4 rounded-xl md:rounded-2xl text-[8px] md:text-[10px] font-bold text-white/40 uppercase tracking-widest border border-white/5">AES-256 Encrypted</div>
-                       <div className="bg-white/5 px-4 md:px-6 py-3 md:py-4 rounded-xl md:rounded-2xl text-[8px] md:text-[10px] font-bold text-white/40 uppercase tracking-widest border border-white/5">ISO 27001 Ready</div>
-                       <div className="bg-white/5 px-4 md:px-6 py-3 md:py-4 rounded-xl md:rounded-2xl text-[8px] md:text-[10px] font-bold text-white/40 uppercase tracking-widest border border-white/5">SOC2 Type II</div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Decorative Elements */}
-                <div className="absolute -top-12 -right-12 w-64 h-64 bg-[#c1ff72]/10 rounded-full blur-[100px] -z-10" />
-                <div className="absolute -bottom-12 -left-12 w-64 h-64 bg-[#ffe44d]/10 rounded-full blur-[100px] -z-10" />
-              </div>
-            </div>
-          </div>
-        </motion.section>
-
         {/* SECTION: Interactive FAQ */}
         <motion.section 
           id="faq" 
@@ -605,10 +497,13 @@ export default function LandingPage() {
                     onClick={() => setOpenFaq(openFaq === i ? null : i)}
                     className="w-full py-6 flex items-center justify-between text-left group"
                   >
-                    <span className={`text-lg md:text-xl font-bold transition-colors ${openFaq === i ? 'text-[#c1ff72]' : 'text-white/60 group-hover:text-white'}`}>
-                      {faq.question}
-                    </span>
-                    <Plus className={`w-5 h-5 transition-transform ${openFaq === i ? 'rotate-45 text-[#c1ff72]' : 'text-white/20'}`} />
+                    <span className="text-white text-lg md:text-xl font-bold tracking-tight text-left font-jakarta pr-4">{faq.question}</span>
+                    <motion.div 
+                      animate={{ rotate: openFaq === i ? 180 : 0 }}
+                      className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-[#c1ff72] group-hover:border-[#c1ff72] transition-all"
+                    >
+                      <ChevronDown className="w-4 h-4 md:w-5 md:h-5 text-white/30 group-hover:text-[#061a12] transition-colors" />
+                    </motion.div>
                   </button>
                   <AnimatePresence>
                     {openFaq === i && (
@@ -629,37 +524,29 @@ export default function LandingPage() {
             </div>
           </div>
         </motion.section>
-
-        {/* SECTION: Final CTA */}
-        <section className="py-20 md:py-40 px-6 bg-gradient-to-b from-transparent to-[#c1ff72]/5">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-5xl md:text-9xl font-bold tracking-tighter text-white mb-12 leading-[0.85]">
-              Your Future. <br /> <span className="text-[#c1ff72]">Optimized.</span>
-            </h2>
-            <Link 
-              href="/onboarding"
-              className="bg-[#c1ff72] text-[#061a12] px-6 md:px-12 py-3 md:py-6 rounded-xl md:rounded-2xl font-bold text-base md:text-xl hover:scale-110 transition-all shadow-[0_20px_50px_rgba(193,255,114,0.3)] uppercase tracking-widest active:scale-95"
-            >
-              Get Started
-            </Link>
-          </div>
-        </section>
       </main>
 
-      <footer className="py-20 px-6 border-t border-white/5">
+      {/* WORLD CLASS FOOTER */}
+      <footer className="bg-[#061a12] pt-20 md:pt-40 pb-12 md:pb-20 border-t border-white/5 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-12 mb-20 md:mb-32">
-            <img src="/logo.svg" alt="Pathway Logo" className="h-10 w-auto" />
+          {/* Top Branding Section */}
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-32 gap-12 text-left">
+            <div className="max-w-2xl">
+              <img src="/logo.svg" alt="Pathway Logo" className="h-24 md:h-32 w-auto mb-10 -ml-2" />
+              <h2 className="text-4xl md:text-6xl font-bold text-white tracking-tight leading-[1.1] md:leading-[0.9]">
+                The first autonomous <br /> AI Student Copilot.
+              </h2>
+            </div>
             <Link 
-              href="/onboarding"
-              className="bg-[#c1ff72] text-[#061a12] px-6 md:px-12 py-3 md:py-6 rounded-xl md:rounded-2xl font-bold text-base md:text-xl hover:scale-110 transition-all shadow-[0_20px_50px_rgba(193,255,114,0.3)] uppercase tracking-widest active:scale-95"
+              href={startLink}
+              className="bg-[#c1ff72] text-[#061a12] px-8 md:px-12 py-4 md:py-6 rounded-xl md:rounded-2xl font-bold text-lg md:text-xl hover:scale-110 transition-all shadow-[0_20px_50px_rgba(193,255,114,0.3)] uppercase tracking-widest active:scale-95"
             >
               Get Started
             </Link>
           </div>
 
           {/* Links Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 mb-12 md:mb-32 border-t border-white/5 pt-12 md:pt-20 text-left">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 mb-32 border-t border-white/5 pt-20 text-left">
             <div>
               <h4 className="text-white font-bold uppercase text-[10px] tracking-[0.3em] mb-8">Platform</h4>
               <ul className="space-y-4 text-white/40 font-bold text-sm">
