@@ -79,7 +79,9 @@ export default function OnboardingPage() {
 
   useEffect(() => {
     const checkProfile = async (session: any) => {
-      if (session?.user) {
+      if (!session?.user) return;
+      
+      try {
         // 1. Check if onboarding is completed
         const { data: profile } = await supabase
           .from('profiles')
@@ -99,6 +101,9 @@ export default function OnboardingPage() {
             phone: profile.phone || "",
             location: profile.location || ""
           });
+          if (profile.current_step) {
+            setStep(profile.current_step);
+          }
         }
 
         const [
@@ -120,15 +125,33 @@ export default function OnboardingPage() {
         if (skillsData) setSkills(skillsData.map(s => s.name));
         if (certsData) setCerts(certsData.map(c => ({ name: c.name, issuer: c.issuer, id: c.certificate_id, date: "" })));
         if (achData) setAchievements(achData as any);
+      } catch (err) {
+        console.error("Error fetching profile data:", err);
+      } finally {
+        setLoading(false);
       }
     };
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      setUser(session?.user || null);
+    const initAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
       if (session?.user) {
-        checkProfile(session);
+        setUser(session.user);
+        await checkProfile(session);
+      } else {
+        setLoading(false);
       }
-      setLoading(false);
+    };
+
+    initAuth();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session?.user) {
+        setUser(session.user);
+        checkProfile(session);
+      } else {
+        setUser(null);
+        setLoading(false);
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -178,6 +201,12 @@ export default function OnboardingPage() {
           await supabase.from('achievements').insert(achievements.map(a => ({ ...a, profile_id: user.id })));
         }
       }
+
+      // Always update the current step in profiles
+      await supabase.from('profiles').update({ 
+        current_step: Math.min(targetStep + 1, 6),
+        updated_at: new Date().toISOString()
+      }).eq('id', user.id);
     } catch (error) {
       console.error("Error auto-saving step:", error);
     }
@@ -645,7 +674,7 @@ function StepSkills({ skills, setSkills }: any) {
           />
           <button 
             onClick={() => addSkill(input)}
-            className="bg-[#c1ff72] text-[#061a12] px-6 md:px-8 rounded-3xl font-bold flex items-center justify-center hover:scale-105 active:scale-95 transition-all shrink-0"
+            className="bg-[#c1ff72] text-[#061a12] w-14 h-14 md:w-16 md:h-16 rounded-3xl font-bold flex items-center justify-center hover:scale-105 active:scale-95 transition-all shrink-0"
           >
             <Plus className="w-5 h-5 md:w-6 md:h-6" />
           </button>

@@ -499,10 +499,10 @@ export default function LandingPage() {
                   >
                     <span className="text-white text-lg md:text-xl font-bold tracking-tight text-left font-jakarta pr-4">{faq.question}</span>
                     <motion.div 
-                      animate={{ rotate: openFaq === i ? 180 : 0 }}
+                      animate={{ rotate: openFaq === i ? 90 : 0 }}
                       className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-[#c1ff72] group-hover:border-[#c1ff72] transition-all"
                     >
-                      <ChevronDown className="w-4 h-4 md:w-5 md:h-5 text-white/30 group-hover:text-[#061a12] transition-colors" />
+                      <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-white/30 group-hover:text-[#061a12] transition-colors" />
                     </motion.div>
                   </button>
                   <AnimatePresence>
