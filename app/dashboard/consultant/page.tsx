@@ -66,7 +66,7 @@ export default function ConsultantPage() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-140px)] relative">
+    <div className="flex flex-col h-[calc(100vh-320px)] md:h-[calc(100vh-400px)] relative">
       <div className="flex-1 overflow-y-auto pr-2 space-y-6 scrollbar-thin scrollbar-thumb-white/10 pb-32" ref={scrollRef}>
         <AnimatePresence initial={false}>
           {messages.map((m, i) => (
@@ -103,7 +103,7 @@ export default function ConsultantPage() {
         )}
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 pt-8 pb-4 bg-gradient-to-t from-[#061a12] via-[#061a12] to-transparent">
+      <div className="absolute -bottom-4 md:bottom-0 left-0 right-0 pt-8 pb-4 bg-gradient-to-t from-[#061a12] via-[#061a12] to-transparent z-10">
         <div className="relative group">
           <input
             type="text"
@@ -116,7 +116,7 @@ export default function ConsultantPage() {
           <button
             onClick={handleSend}
             disabled={isLoading || !input.trim()}
-            className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 p-3 md:p-4 bg-[#c1ff72] text-[#061a12] rounded-xl hover:scale-105 transition-all disabled:opacity-50 disabled:hover:scale-100"
+            className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 p-3 md:p-4 bg-[#c1ff72] text-[#061a12] rounded-xl hover:scale-105 transition-all disabled:opacity-50 disabled:hover:scale-100 shadow-lg shadow-[#c1ff72]/20"
           >
             <Send className="w-4 h-4 md:w-5 md:h-5" />
           </button>
