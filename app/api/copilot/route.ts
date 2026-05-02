@@ -25,7 +25,7 @@ export async function POST(req: Request) {
     ]);
 
     // 1.5 Fetch University Data from Matching DB (RAG Context)
-    let universityData = [];
+    let universityData: any[] = [];
     try {
       const { data: unis } = await supabaseMatching
         .from('universities')
