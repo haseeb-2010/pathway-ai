@@ -531,8 +531,8 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto">
           {/* Top Branding Section */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-32 gap-12 text-left">
-            <div className="max-w-2xl">
-              <img src="/logo.svg" alt="Pathway Logo" className="h-24 md:h-40 w-auto mb-10 -ml-10 md:-ml-20 scale-[1.5] origin-left" />
+            <div className="max-w-2xl w-full">
+              <img src="/logo.svg" alt="Pathway Logo" className="h-16 md:h-40 w-auto mb-10 ml-0 md:-ml-20 scale-125 md:scale-[1.5] origin-left" />
               <h2 className="text-4xl md:text-6xl font-bold text-white tracking-tight leading-[1.1] md:leading-[0.9]">
                 The first autonomous <br /> AI Student Copilot.
               </h2>
