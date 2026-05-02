@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { 
@@ -11,7 +11,8 @@ import {
   LogOut,
   Menu,
   X,
-  Bell
+  Bell,
+  PanelLeft
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/lib/supabase";
@@ -23,12 +24,31 @@ export default function DashboardLayout({
 }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [userName, setUserName] = useState("Student User");
   const pathname = usePathname();
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('full_name')
+          .eq('id', user.id)
+          .single();
+        if (profile?.full_name) {
+          setUserName(profile.full_name);
+        }
+      }
+    };
+    fetchProfile();
+  }, []);
 
   const navItems = [
     { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
     { name: "Academic Copilot", href: "/dashboard/copilot", icon: BookOpen },
-    { name: "Internship Tracker", href: "/dashboard/tracker", icon: Briefcase },
+    { name: "Internships", href: "/dashboard/internships", icon: Briefcase },
+    { name: "Consultant", href: "/dashboard/consultant", icon: BookOpen },
     { name: "Settings", href: "/dashboard/settings", icon: Settings },
   ];
 
@@ -38,26 +58,16 @@ export default function DashboardLayout({
   };
 
   return (
-    <div className="min-h-screen bg-[#061a12] text-white flex flex-col">
+    <div className="h-screen bg-[#061a12] text-white flex flex-col overflow-hidden">
       {/* Unified Top Header */}
-      <header className="h-20 border-b border-white/5 bg-[#061a12]/80 backdrop-blur-xl flex items-center justify-between px-6 md:px-12 sticky top-0 z-50">
+      <header className="h-20 border-b border-white/5 bg-[#061a12]/80 backdrop-blur-xl flex items-center justify-between px-6 md:px-12 shrink-0 z-50">
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center shrink-0">
-            <img src="/logo.svg" alt="Pathway Logo" className="h-10 md:h-12 w-auto object-contain -ml-2" />
+            <img src="/logo.svg" alt="Pathway Logo" className="h-12 md:h-16 w-auto object-contain -ml-4" />
           </Link>
-          <button 
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            className="hidden lg:flex p-2 rounded-xl bg-white/5 hover:bg-white/10 text-white/40 hover:text-[#c1ff72] transition-all"
-          >
-            <Menu className="w-5 h-5" />
-          </button>
         </div>
 
         <div className="flex items-center gap-4 md:gap-8">
-          <div className="hidden md:flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/5 text-[10px] font-bold text-white/40 uppercase tracking-widest">
-            <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-            System Active
-          </div>
           <div className="flex items-center gap-3 md:gap-6">
             <button className="relative p-2 text-white/40 hover:text-[#c1ff72] transition-colors">
               <Bell className="w-5 h-5 md:w-6 md:h-6" />
@@ -65,8 +75,7 @@ export default function DashboardLayout({
             </button>
             <div className="flex items-center gap-3 pl-3 md:pl-6 border-l border-white/5">
               <div className="hidden md:block text-right">
-                <p className="text-xs font-bold text-white">Student User</p>
-                <p className="text-[10px] font-bold text-white/20 uppercase tracking-tighter">Premium Plan</p>
+                <p className="text-xs font-bold text-white">{userName}</p>
               </div>
               <div className="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-[#c1ff72]/10 border border-[#c1ff72]/20 flex items-center justify-center overflow-hidden">
                 <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=User" alt="Avatar" className="w-full h-full object-cover" />
@@ -79,14 +88,14 @@ export default function DashboardLayout({
         </div>
       </header>
 
-      <div className="flex flex-1">
+      <div className="flex flex-1 overflow-hidden">
         {/* Sidebar - Desktop */}
         <motion.aside 
           animate={{ width: isCollapsed ? 96 : 288 }}
           transition={{ type: "spring", damping: 20, stiffness: 100 }}
-          className="hidden lg:flex flex-col border-r border-white/5 bg-[#061a12]/30 backdrop-blur-xl h-[calc(100vh-80px)] sticky top-20 overflow-hidden"
+          className="hidden lg:flex flex-col border-r border-white/5 bg-[#061a12]/30 backdrop-blur-xl h-full overflow-hidden"
         >
-          <nav className="flex-1 px-4 py-8 space-y-2">
+          <nav className="flex-1 px-4 py-8 space-y-2 overflow-y-auto">
             {navItems.map((item) => {
               const isActive = pathname === item.href;
               return (
@@ -114,7 +123,16 @@ export default function DashboardLayout({
             })}
           </nav>
 
-          <div className="p-6 border-t border-white/5">
+          <div className="p-4 space-y-2 border-t border-white/5">
+            <button 
+              onClick={() => setIsCollapsed(!isCollapsed)}
+              className={`flex items-center gap-3 w-full rounded-2xl text-white/40 font-bold text-sm hover:text-[#c1ff72] hover:bg-[#c1ff72]/5 transition-all group ${
+                isCollapsed ? "justify-center p-4" : "px-6 py-4"
+              }`}
+            >
+              <PanelLeft className={`w-5 h-5 text-white/20 group-hover:text-[#c1ff72] shrink-0 transition-transform ${isCollapsed ? "rotate-180" : ""}`} />
+              {!isCollapsed && <span>Collapse</span>}
+            </button>
             <button 
               onClick={handleSignOut}
               className={`flex items-center gap-3 w-full rounded-2xl text-white/40 font-bold text-sm hover:text-red-400 hover:bg-red-400/5 transition-all group ${
@@ -184,7 +202,7 @@ export default function DashboardLayout({
         </AnimatePresence>
 
         {/* Main Content Area */}
-        <main className="flex-1 min-h-[calc(100vh-80px)] overflow-x-hidden">
+        <main className="flex-1 overflow-y-auto overflow-x-hidden scroll-smooth">
           <div className="p-6 md:p-12 max-w-7xl mx-auto">
             {/* Context Title for Main Area */}
             <div className="mb-10 md:mb-16">

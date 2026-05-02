@@ -1,0 +1,97 @@
+
+import { NextResponse } from "next/server";
+import { supabase, supabaseMatching } from "@/lib/supabase";
+
+export async function POST(req: Request) {
+  try {
+    const { userId } = await req.json();
+
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // 1. Fetch Student Profile
+    const [
+      { data: profile },
+      { data: education },
+      { data: experience },
+      { data: skills }
+    ] = await Promise.all([
+      supabase.from('profiles').select('*').eq('id', userId).single(),
+      supabase.from('education').select('*').eq('profile_id', userId),
+      supabase.from('experience').select('*').eq('profile_id', userId),
+      supabase.from('skills').select('*').eq('profile_id', userId),
+    ]);
+
+    // 2. Fetch Internship Data from Matching DB
+    const { data: internships } = await supabaseMatching
+      .from('internships')
+      .select('*')
+      .limit(50); // Get a good sample to filter
+
+    // 3. Use NVIDIA LLM to match
+    const response = await fetch("https://integrate.api.nvidia.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${process.env.NVIDIA_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "qwen/qwen3-next-80b-a3b-thinking",
+        messages: [
+          {
+            role: "system",
+            content: "You are the Pathway AI Matching Engine. Your job is to analyze a student's profile and a list of internships to find the best matches. Return only JSON."
+          },
+          {
+            role: "user",
+            content: `
+            Student Profile:
+            - Full Name: ${profile?.full_name}
+            - Location: ${profile?.location}
+            - Education: ${JSON.stringify(education)}
+            - Experience: ${JSON.stringify(experience)}
+            - Skills: ${JSON.stringify(skills?.map((s: any) => s.skill_name))}
+
+            Internship List:
+            ${JSON.stringify(internships)}
+
+            Task:
+            1. Select the top 6 internships that best match this student's skills and background.
+            2. For each, calculate a 'match_score' (percentage).
+            3. Provide a brief explanation of why it fits.
+
+            Return JSON format:
+            {
+              "matches": [
+                {
+                  "id": "...",
+                  "role": "...",
+                  "company": "...",
+                  "location": "...",
+                  "description": "...",
+                  "match_score": 95,
+                  "why": "...",
+                  "apply_link": "..."
+                }
+              ]
+            }
+            `
+          }
+        ],
+        temperature: 0.1,
+      }),
+    });
+
+    const aiResponse = await response.json();
+    const content = aiResponse.choices[0].message.content;
+    const jsonString = content.replace(/```json|```/g, "").trim();
+    const data = JSON.parse(jsonString);
+
+    return NextResponse.json(data);
+
+  } catch (error: any) {
+    console.error("Match API Error:", error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
