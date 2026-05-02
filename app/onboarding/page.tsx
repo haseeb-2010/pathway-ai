@@ -107,33 +107,6 @@ export default function OnboardingPage() {
           <p className="text-white/40 mb-8 font-jakarta text-sm">Join the 10,000+ students navigating their global future.</p>
           
           <div className="space-y-4">
-            {authMode !== 'forgot' && (
-              <>
-                {/* Social Auth */}
-                <div className="grid grid-cols-2 gap-4">
-                  <button 
-                    onClick={() => supabase.auth.signInWithOAuth({ provider: 'google' })}
-                    className="bg-white/5 border border-white/10 text-white p-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-white/10 transition-all text-xs uppercase tracking-widest"
-                  >
-                    <img src="https://www.google.com/favicon.ico" className="w-4 h-4" alt="Google" />
-                    Google
-                  </button>
-                  <button 
-                    onClick={() => supabase.auth.signInWithOAuth({ provider: 'apple' })}
-                    className="bg-white text-black p-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-white/90 transition-all text-xs uppercase tracking-widest"
-                  >
-                    <img src="https://www.apple.com/favicon.ico" className="w-4 h-4 invert" alt="Apple" />
-                    Apple
-                  </button>
-                </div>
-
-                <div className="flex items-center gap-4 my-6">
-                  <div className="h-[1px] flex-1 bg-white/5" />
-                  <span className="text-[10px] font-bold text-white/10 uppercase tracking-widest">or email</span>
-                  <div className="h-[1px] flex-1 bg-white/5" />
-                </div>
-              </>
-            )}
 
             {/* Email/Pass Auth */}
             <form className="space-y-4 text-left" onSubmit={async (e) => {
