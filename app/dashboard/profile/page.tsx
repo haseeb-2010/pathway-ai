@@ -137,14 +137,14 @@ export default function ProfilePage() {
   );
 
   return (
-    <div className="max-w-6xl mx-auto space-y-12 pb-40">
+    <div className="max-w-6xl mx-auto space-y-8 md:space-y-12 pb-40 px-4 md:px-0">
       {/* Profile Header Hero */}
-      <div className="relative glass p-8 md:p-16 rounded-[48px] border-white/5 overflow-hidden">
+      <div className="relative glass p-6 md:p-16 rounded-[32px] md:rounded-[48px] border-white/5 overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#c1ff72]/5 blur-[100px] rounded-full -mr-32 -mt-32" />
         
-        <div className="flex flex-col md:flex-row items-center gap-10 relative z-10">
+        <div className="flex flex-col md:flex-row items-center gap-6 md:gap-10 relative z-10">
           <div className="relative group">
-            <div className="w-32 h-32 md:w-48 md:h-48 rounded-[40px] bg-[#c1ff72]/10 border border-[#c1ff72]/20 flex items-center justify-center overflow-hidden shadow-2xl">
+            <div className="w-24 h-24 md:w-48 md:h-48 rounded-[24px] md:rounded-[40px] bg-[#c1ff72]/10 border border-[#c1ff72]/20 flex items-center justify-center overflow-hidden shadow-2xl">
               <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${profile.full_name}`} alt="Avatar" className="w-full h-full object-cover" />
             </div>
             {!isEditing && (
@@ -157,10 +157,10 @@ export default function ProfilePage() {
             )}
           </div>
 
-          <div className="text-center md:text-left space-y-4 flex-1">
-            <div className="space-y-2">
+          <div className="text-center md:text-left space-y-3 md:space-y-4 flex-1">
+            <div className="space-y-1 md:space-y-2">
               <span className="text-[10px] font-bold text-[#c1ff72] uppercase tracking-[0.4em]">Academic Dossier</span>
-              <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-white">{profile.full_name}</h1>
+              <h1 className="text-3xl md:text-6xl font-bold tracking-tight text-white">{profile.full_name}</h1>
             </div>
             
             <div className="flex flex-wrap justify-center md:justify-start gap-4">
@@ -196,10 +196,10 @@ export default function ProfilePage() {
 
       <div className="grid lg:grid-cols-3 gap-8">
         {/* Main Info Column */}
-        <div className="lg:col-span-2 space-y-8">
+        <div className="lg:col-span-2 space-y-6 md:space-y-8">
           
           {/* Identity & Contact */}
-          <div className="glass p-8 md:p-12 rounded-[48px] border-white/5 space-y-10">
+          <div className="glass p-6 md:p-12 rounded-[32px] md:rounded-[48px] border-white/5 space-y-8 md:space-y-10">
             <div className="flex items-center gap-4">
               <User className="w-6 h-6 text-[#c1ff72]" />
               <h2 className="text-2xl font-bold">Personal Identification</h2>
@@ -237,7 +237,7 @@ export default function ProfilePage() {
           </div>
 
           {/* Academic Background */}
-          <div className="glass p-8 md:p-12 rounded-[48px] border-white/5 space-y-10">
+          <div className="glass p-6 md:p-12 rounded-[32px] md:rounded-[48px] border-white/5 space-y-8 md:space-y-10">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <GraduationCap className="w-6 h-6 text-[#c1ff72]" />
@@ -294,7 +294,7 @@ export default function ProfilePage() {
           </div>
 
           {/* Work Experience */}
-          <div className="glass p-8 md:p-12 rounded-[48px] border-white/5 space-y-10">
+          <div className="glass p-6 md:p-12 rounded-[32px] md:rounded-[48px] border-white/5 space-y-8 md:space-y-10">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <Briefcase className="w-6 h-6 text-[#c1ff72]" />
@@ -352,9 +352,9 @@ export default function ProfilePage() {
         </div>
 
         {/* Sidebar Info Column */}
-        <div className="space-y-8">
+        <div className="space-y-6 md:space-y-8">
           {/* Skills */}
-          <div className="glass p-8 md:p-10 rounded-[48px] border-white/5 space-y-8">
+          <div className="glass p-6 md:p-10 rounded-[32px] md:rounded-[48px] border-white/5 space-y-6 md:space-y-8">
             <div className="flex items-center justify-between">
               <h3 className="font-bold uppercase text-[10px] tracking-widest text-white/20">Competencies</h3>
               {isEditing && (
@@ -396,7 +396,7 @@ export default function ProfilePage() {
           </div>
 
           {/* Certificates */}
-          <div className="glass p-8 md:p-10 rounded-[48px] border-white/5 space-y-8">
+          <div className="glass p-6 md:p-10 rounded-[32px] md:rounded-[48px] border-white/5 space-y-6 md:space-y-8">
             <div className="flex items-center justify-between">
               <h3 className="font-bold uppercase text-[10px] tracking-widest text-white/20">Certifications</h3>
               {isEditing && (
