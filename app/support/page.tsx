@@ -70,7 +70,7 @@ export default function SupportPage() {
              <div className="pt-8 space-y-6">
                 <a 
                   href="mailto:help@pathway.ai"
-                  className="bg-[#c1ff72] text-[#061a12] px-10 py-6 rounded-2xl font-bold text-lg md:text-xl uppercase tracking-widest hover:scale-105 transition-all inline-flex items-center gap-4 shadow-[0_20px_40px_rgba(193,255,114,0.2)]"
+                  className="bg-[#c1ff72] text-[#061a12] px-6 md:px-10 py-4 md:py-6 rounded-2xl font-bold text-xs md:text-xl uppercase tracking-widest hover:scale-105 transition-all inline-flex items-center gap-3 md:gap-4 shadow-[0_20px_40px_rgba(193,255,114,0.2)]"
                 >
                   <Mail className="w-6 h-6" /> help@pathway.ai
                 </a>
