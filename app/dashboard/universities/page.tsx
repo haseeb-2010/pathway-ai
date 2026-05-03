@@ -20,16 +20,21 @@ import {
 import { supabase } from "@/lib/supabase";
 
 export default function UniversitiesPage() {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [matches, setMatches] = useState<any[]>([]);
   const [filterCountry, setFilterCountry] = useState("All");
-
-  useEffect(() => {
-    fetchMatches();
-  }, []);
+  const [hasSearched, setHasSearched] = useState(false);
+  
+  // Preferences State
+  const [prefs, setPrefs] = useState({
+    degree: "Bachelors",
+    countries: ["USA", "UK", "Canada"],
+    budget: "$20,000 - $40,000"
+  });
 
   const fetchMatches = async () => {
     setLoading(true);
+    setHasSearched(true);
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
@@ -37,7 +42,11 @@ export default function UniversitiesPage() {
       const response = await fetch('/api/match', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: user.id, type: 'universities' })
+        body: JSON.stringify({ 
+          userId: user.id, 
+          type: 'universities',
+          preferences: prefs
+        })
       });
 
       const data = await response.json();
@@ -69,22 +78,105 @@ export default function UniversitiesPage() {
           </p>
         </div>
 
-        <div className="flex gap-3">
-          <div className="glass px-6 py-4 rounded-2xl flex items-center gap-4 border-white/5">
-            <Filter className="w-4 h-4 text-[#c1ff72]" />
-            <select 
-              value={filterCountry}
-              onChange={(e) => setFilterCountry(e.target.value)}
-              className="bg-transparent text-xs font-bold text-white outline-none appearance-none cursor-pointer uppercase tracking-widest"
+        {hasSearched && (
+          <div className="flex gap-3">
+            <div className="glass px-6 py-4 rounded-2xl flex items-center gap-4 border-white/5">
+              <Filter className="w-4 h-4 text-[#c1ff72]" />
+              <select 
+                value={filterCountry}
+                onChange={(e) => setFilterCountry(e.target.value)}
+                className="bg-transparent text-xs font-bold text-white outline-none appearance-none cursor-pointer uppercase tracking-widest"
+              >
+                {countries.map(c => <option key={c} value={c} className="bg-[#061a12]">{c}</option>)}
+              </select>
+            </div>
+            <button 
+              onClick={() => setHasSearched(false)}
+              className="glass px-6 py-4 rounded-2xl text-[10px] font-bold text-white/40 hover:text-white uppercase tracking-widest border-white/5"
             >
-              {countries.map(c => <option key={c} value={c} className="bg-[#061a12]">{c}</option>)}
-            </select>
+              Adjust Prefs
+            </button>
           </div>
-        </div>
+        )}
       </section>
 
-      {/* Results Grid */}
-      {loading ? (
+      {!hasSearched ? (
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="max-w-3xl mx-auto glass p-8 md:p-12 rounded-[48px] border-white/5 space-y-10"
+        >
+          <div className="text-center space-y-4">
+            <div className="w-16 h-16 bg-[#c1ff72]/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
+              <Sparkles className="w-8 h-8 text-[#c1ff72]" />
+            </div>
+            <h2 className="text-3xl font-bold">Set Your Direction.</h2>
+            <p className="text-white/40 text-sm">Tell us your goals, and we'll scan the global database for your perfect fit.</p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="space-y-3">
+              <label className="text-[10px] font-bold text-white/20 uppercase tracking-widest ml-1">Target Degree</label>
+              <select 
+                value={prefs.degree}
+                onChange={e => setPrefs({...prefs, degree: e.target.value})}
+                className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-[#c1ff72]/50 transition-all appearance-none"
+              >
+                <option value="Bachelors" className="bg-[#061a12]">Bachelors</option>
+                <option value="Masters" className="bg-[#061a12]">Masters</option>
+                <option value="PhD" className="bg-[#061a12]">PhD</option>
+              </select>
+            </div>
+
+            <div className="space-y-3">
+              <label className="text-[10px] font-bold text-white/20 uppercase tracking-widest ml-1">Yearly Budget</label>
+              <select 
+                value={prefs.budget}
+                onChange={e => setPrefs({...prefs, budget: e.target.value})}
+                className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-[#c1ff72]/50 transition-all appearance-none"
+              >
+                <option value="Under $20,000" className="bg-[#061a12]">Under $20,000</option>
+                <option value="$20,000 - $40,000" className="bg-[#061a12]">$20,000 - $40,000</option>
+                <option value="$40,000 - $60,000" className="bg-[#061a12]">$40,000 - $60,000</option>
+                <option value="Above $60,000" className="bg-[#061a12]">Above $60,000</option>
+              </select>
+            </div>
+
+            <div className="md:col-span-2 space-y-3">
+              <label className="text-[10px] font-bold text-white/20 uppercase tracking-widest ml-1">Target Countries</label>
+              <div className="flex flex-wrap gap-3">
+                {["USA", "UK", "Canada", "Germany", "Australia", "Turkey"].map(country => (
+                  <button
+                    key={country}
+                    onClick={() => {
+                      const next = prefs.countries.includes(country)
+                        ? prefs.countries.filter(c => c !== country)
+                        : [...prefs.countries, country];
+                      setPrefs({...prefs, countries: next});
+                    }}
+                    className={`px-6 py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all ${
+                      prefs.countries.includes(country)
+                        ? "bg-[#c1ff72] text-[#061a12]"
+                        : "bg-white/5 text-white/40 hover:bg-white/10"
+                    }`}
+                  >
+                    {country}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <button 
+            onClick={fetchMatches}
+            disabled={loading || prefs.countries.length === 0}
+            className="w-full bg-[#c1ff72] text-[#061a12] py-6 rounded-[32px] font-bold text-xs uppercase tracking-[0.3em] hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-4 disabled:opacity-50"
+          >
+            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Zap className="w-5 h-5" />}
+            {loading ? "Analyzing Database..." : "Find My Perfect Match"}
+          </button>
+        </motion.div>
+      ) : loading ? (
         <div className="py-40 flex flex-col items-center gap-4">
           <Loader2 className="w-10 h-10 animate-spin text-[#c1ff72]" />
           <p className="text-white/20 font-bold uppercase tracking-widest text-[10px]">Scanning Global Databases...</p>
@@ -168,7 +260,7 @@ export default function UniversitiesPage() {
       )}
 
       {/* Empty State */}
-      {!loading && filteredMatches.length === 0 && (
+      {!loading && hasSearched && filteredMatches.length === 0 && (
         <div className="py-40 text-center space-y-6">
           <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mx-auto">
             <Search className="w-10 h-10 text-white/10" />
