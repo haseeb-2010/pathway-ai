@@ -79,7 +79,7 @@ function InternshipsContent() {
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.2 }}
         >
-          {activeTab === 'Dashboard' && <DashboardTab userId={userId} />}
+          {activeTab === 'Dashboard' && <DashboardTab userId={userId} onTabChange={setActiveTab} />}
           {activeTab === 'Interview Practice' && <InterviewTab userId={userId} />}
         </motion.div>
       </AnimatePresence>
@@ -89,7 +89,7 @@ function InternshipsContent() {
 
 // --- Sub-Components ---
 
-function DashboardTab({ userId }: { userId: string | null }) {
+function DashboardTab({ userId, onTabChange }: { userId: string | null, onTabChange: (tab: Tab) => void }) {
   const [stats, setStats] = useState<any>({
     activeApps: 0,
     matchedOpps: 0,
@@ -203,7 +203,7 @@ function DashboardTab({ userId }: { userId: string | null }) {
           <div className="glass p-8 rounded-[40px] border-white/5 space-y-8">
             <div className="flex items-center justify-between">
               <h3 className="text-xl font-bold">Interview Progress</h3>
-              <button onClick={() => setActiveTab('Interview Practice')} className="text-[10px] font-bold text-[#c1ff72] uppercase tracking-widest hover:underline">Start Practice</button>
+               <button onClick={() => onTabChange('Interview Practice')} className="text-[10px] font-bold text-[#c1ff72] uppercase tracking-widest hover:underline">Start Practice</button>
             </div>
             <div className="space-y-4">
               {stats.recentSessions.length > 0 ? stats.recentSessions.map((session: any) => (
