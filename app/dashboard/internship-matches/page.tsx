@@ -38,6 +38,10 @@ export default function InternshipMatchesPage() {
   const [user, setUser] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  
+  // Detail Modal State
+  const [selectedJob, setSelectedJob] = useState<any>(null);
+  const [isDetailLoading, setIsDetailLoading] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -401,11 +405,89 @@ export default function InternshipMatchesPage() {
         userId={user?.id} 
         onRefresh={fetchTrackerData} 
       />
+
+      <InternshipDetailModal 
+        isOpen={!!selectedJob} 
+        onClose={() => setSelectedJob(null)} 
+        data={selectedJob} 
+      />
     </div>
   );
 }
 
-function TrackerModal({ isOpen, onClose, userId, onRefresh }: { isOpen: boolean, onClose: () => void, userId: string | null, onRefresh: () => void }) {
+function InternshipDetailModal({ isOpen, onClose, data }: { isOpen: boolean, onClose: () => void, data: any }) {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} onClick={onClose} className="absolute inset-0 bg-black/80 backdrop-blur-md" />
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        className="bg-[#061a12] border border-white/10 w-full max-w-3xl rounded-[40px] overflow-hidden relative z-10 max-h-[90vh] flex flex-col shadow-[0_0_100px_rgba(193,255,114,0.1)]"
+      >
+        <div className="p-8 md:p-12 border-b border-white/5 flex items-start justify-between relative overflow-hidden">
+           <div className="absolute top-0 right-0 w-64 h-64 bg-[#c1ff72]/5 blur-[100px] rounded-full -translate-y-1/2 translate-x-1/2" />
+           <div className="relative">
+              <div className="flex items-center gap-4 mb-4">
+                 <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center font-black text-[#c1ff72] text-2xl border border-white/10">
+                    {data?.company?.[0]}
+                 </div>
+                 <div>
+                    <h3 className="text-3xl font-bold">{data?.role}</h3>
+                    <div className="flex items-center gap-2 text-white/40 text-xs font-bold uppercase tracking-widest">
+                       <MapPin className="w-4 h-4" /> {data?.location}
+                    </div>
+                 </div>
+              </div>
+           </div>
+           <button onClick={onClose} className="p-3 hover:bg-white/5 rounded-2xl transition-all relative z-10 border border-white/10">
+             <X className="w-6 h-6 text-white/40" />
+           </button>
+        </div>
+
+        <div className="p-8 md:p-12 overflow-y-auto space-y-10 custom-scrollbar">
+           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {[
+                { label: 'Stipend', value: `${data?.currency} ${data?.stipend?.toLocaleString()}`, icon: DollarSign, color: '#c1ff72' },
+                { label: 'Duration', value: data?.duration || '3-6 Months', icon: Clock, color: '#ffe44d' },
+                { label: 'Match', value: `${Math.round(data?.similarity * 100)}%`, icon: Zap, color: '#00ff88' },
+              ].map((stat, i) => (
+                <div key={i} className="p-6 rounded-[28px] bg-white/[0.03] border border-white/5 space-y-3">
+                   <stat.icon className="w-5 h-5" style={{ color: stat.color }} />
+                   <div>
+                      <p className="text-[8px] font-bold text-white/20 uppercase tracking-widest mb-1">{stat.label}</p>
+                      <p className="text-lg font-bold">{stat.value}</p>
+                   </div>
+                </div>
+              ))}
+           </div>
+
+           <div className="space-y-4">
+              <h4 className="text-[10px] font-bold text-white/20 uppercase tracking-[0.3em]">AI Matching Insight</h4>
+              <div className="p-6 rounded-[28px] bg-[#c1ff72]/5 border border-[#c1ff72]/10">
+                 <p className="text-[#c1ff72] leading-relaxed italic text-sm">
+                    "{data?.match_why}"
+                 </p>
+              </div>
+           </div>
+
+           <div className="space-y-4">
+              <h4 className="text-[10px] font-bold text-white/20 uppercase tracking-[0.3em]">Job Description</h4>
+              <p className="text-white/60 leading-relaxed font-medium">
+                 {data?.description}
+              </p>
+           </div>
+
+           <div className="pt-10 flex gap-4">
+              <button className="flex-1 bg-[#c1ff72] text-[#061a12] py-5 rounded-2xl font-bold uppercase tracking-widest text-xs hover:scale-[1.02] transition-all">Apply Now</button>
+              <button className="flex-1 bg-white/5 text-white py-5 rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-white/10 transition-all border border-white/10">Add to Tracker</button>
+           </div>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
   const [formData, setFormData] = useState({
     company: '',
     role: '',

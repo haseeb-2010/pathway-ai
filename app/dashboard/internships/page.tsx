@@ -89,11 +89,13 @@ function InternshipsContent() {
 // --- Sub-Components ---
 
 function DashboardTab({ userId }: { userId: string | null }) {
-  const [stats, setStats] = useState({
+  const [stats, setStats] = useState<any>({
     activeApps: 0,
     matchedOpps: 0,
     interviewsDone: 0,
-    avgScore: 0
+    avgScore: 0,
+    recentApps: [],
+    recentSessions: []
   });
   const [loading, setLoading] = useState(true);
 
@@ -103,8 +105,8 @@ function DashboardTab({ userId }: { userId: string | null }) {
       setLoading(true);
       try {
         const [appsRes, sessionsRes, matchRes] = await Promise.all([
-          supabase.from('applications').select('id, status').eq('profile_id', userId),
-          supabase.from('interview_sessions').select('score').eq('profile_id', userId).not('score', 'is', null),
+          supabase.from('applications').select('*').eq('profile_id', userId).order('updated_at', { ascending: false }),
+          supabase.from('interview_sessions').select('*').eq('profile_id', userId).order('created_at', { ascending: false }),
           fetch('/api/match', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -113,7 +115,7 @@ function DashboardTab({ userId }: { userId: string | null }) {
         ]);
 
         const activeApps = appsRes.data?.filter(a => ['Wishlist', 'Applied', 'Interview'].includes(a.status)).length || 0;
-        const interviewsDone = sessionsRes.data?.length || 0;
+        const interviewsDone = sessionsRes.data?.filter(s => s.score !== null).length || 0;
         const scores = sessionsRes.data?.map(s => parseFloat(s.score)).filter(s => !isNaN(s)) || [];
         const avgScore = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
         const matchedOpps = matchRes.matches?.length || 0;
@@ -122,7 +124,9 @@ function DashboardTab({ userId }: { userId: string | null }) {
           activeApps,
           matchedOpps,
           interviewsDone,
-          avgScore
+          avgScore,
+          recentApps: appsRes.data?.slice(0, 3) || [],
+          recentSessions: sessionsRes.data?.slice(0, 3) || []
         });
       } catch (error) {
         console.error("Error fetching dashboard stats:", error);
@@ -166,12 +170,62 @@ function DashboardTab({ userId }: { userId: string | null }) {
         </div>
       ) : (
         <div className="grid lg:grid-cols-2 gap-8">
-           <div className="glass p-8 rounded-[40px] border-white/5 space-y-6">
-              <h3 className="text-xl font-bold">Recent Activity</h3>
-              <div className="space-y-4">
-                 <p className="text-white/20 text-xs font-bold uppercase tracking-widest">Stay tuned for detailed analytics</p>
-              </div>
-           </div>
+          <div className="glass p-8 rounded-[40px] border-white/5 space-y-8">
+            <div className="flex items-center justify-between">
+              <h3 className="text-xl font-bold">Recent Applications</h3>
+              <Link href="/dashboard/internship-matches?view=tracker" className="text-[10px] font-bold text-[#c1ff72] uppercase tracking-widest hover:underline">View Tracker</Link>
+            </div>
+            <div className="space-y-4">
+              {stats.recentApps.length > 0 ? stats.recentApps.map((app: any) => (
+                <div key={app.id} className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center font-bold text-white/20 text-xs">
+                      {app.company?.[0]}
+                    </div>
+                    <div>
+                      <p className="font-bold text-sm">{app.role}</p>
+                      <p className="text-white/40 text-[10px] uppercase tracking-widest font-bold">{app.company}</p>
+                    </div>
+                  </div>
+                  <span className={`px-2 py-1 rounded-lg text-[8px] font-bold uppercase tracking-widest border ${
+                    app.status === 'Interview' ? 'border-[#c1ff72]/20 text-[#c1ff72]' : 'border-white/10 text-white/40'
+                  }`}>
+                    {app.status}
+                  </span>
+                </div>
+              )) : (
+                <p className="text-white/20 text-xs text-center py-4">No recent applications</p>
+              )}
+            </div>
+          </div>
+
+          <div className="glass p-8 rounded-[40px] border-white/5 space-y-8">
+            <div className="flex items-center justify-between">
+              <h3 className="text-xl font-bold">Interview Progress</h3>
+              <button onClick={() => setActiveTab('Interview Practice')} className="text-[10px] font-bold text-[#c1ff72] uppercase tracking-widest hover:underline">Start Practice</button>
+            </div>
+            <div className="space-y-4">
+              {stats.recentSessions.length > 0 ? stats.recentSessions.map((session: any) => (
+                <div key={session.id} className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center font-bold text-white/20">
+                      <History className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <p className="font-bold text-sm">{session.role}</p>
+                      <p className="text-white/40 text-[10px] uppercase tracking-widest font-bold">{session.company}</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[8px] font-bold text-white/20 uppercase tracking-widest">Score</p>
+                    <p className="font-bold text-[#c1ff72] text-sm">{session.score ? `${session.score}%` : 'N/A'}</p>
+                  </div>
+                </div>
+              )) : (
+                <p className="text-white/20 text-xs text-center py-4">No recent sessions</p>
+              )}
+            </div>
+          </div>
         </div>
       )}
     </div>
