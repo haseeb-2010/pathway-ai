@@ -494,6 +494,4 @@ function UniDetailModal({ isOpen, onClose, data, loading }: { isOpen: boolean, o
   );
 }
 
-// Custom Icons
-import { Trophy, Banknote, ArrowRight as ArrowRightIcon } from "lucide-react";
 
