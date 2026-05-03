@@ -36,10 +36,10 @@ const slides = [
             <Sparkles className="w-4 h-4 text-[#c1ff72]" />
             <span className="text-[10px] font-bold text-[#c1ff72] uppercase tracking-[0.2em]">Phase 1: Discovery</span>
           </div>
-          <h2 className="text-5xl md:text-7xl font-bold leading-[1.1] tracking-tight">
+          <h2 className="text-6xl md:text-8xl font-bold leading-[1.1] tracking-tight">
             Bypass the <br /> <span className="text-[#c1ff72]">Gatekeepers.</span>
           </h2>
-          <p className="text-white/40 text-lg leading-relaxed max-w-lg">
+          <p className="text-white/40 text-xl leading-relaxed max-w-xl">
             We are replacing $2,000 consultants with an autonomous AI engine that matches students to global opportunities with 98% precision.
           </p>
           <div className="flex gap-4 pt-4">
@@ -66,8 +66,8 @@ const slides = [
     subtitle: "A Broken Pipeline",
     content: (
       <div className="grid lg:grid-cols-2 gap-12 items-center">
-        <div className="space-y-8">
-          <h2 className="text-4xl md:text-6xl font-bold leading-tight">
+        <div className="space-y-10">
+          <h2 className="text-5xl md:text-7xl font-bold leading-tight">
             The <span className="text-white/20 italic">Manual</span> Era <br /> is Obsolete.
           </h2>
           <div className="space-y-4">
@@ -100,8 +100,8 @@ const slides = [
     subtitle: "Precision Engineering",
     content: (
       <div className="grid lg:grid-cols-2 gap-12 items-center">
-        <div className="space-y-8">
-          <h2 className="text-4xl md:text-6xl font-bold leading-tight">
+        <div className="space-y-10">
+          <h2 className="text-5xl md:text-7xl font-bold leading-tight">
             Total <br /><span className="text-[#c1ff72]">Career Stack.</span>
           </h2>
           <div className="grid grid-cols-1 gap-4">
@@ -286,27 +286,27 @@ export default function PitchDeck() {
       </div>
 
       {/* FIXED HEADER (Outside Boundary) */}
-      <header className="p-8 md:p-12 flex items-center justify-between z-50">
-        <div className="flex items-center gap-6">
-           <div className="relative w-48 h-12">
+      <header className="p-12 md:p-16 flex items-center justify-between z-50">
+        <div className="flex items-center gap-10">
+           <div className="relative w-64 h-16">
               <Image 
                 src="/logo.png" 
                 alt="Pathway Logo" 
                 fill 
-                className="object-contain object-left scale-150 transform translate-x-4" 
+                className="object-contain object-left scale-[2.5] transform translate-x-12" 
                 priority
               />
            </div>
         </div>
-        <div className="flex flex-col items-end gap-1">
-           <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#c1ff72]">Investor Pitch 2026</span>
-           <span className="text-[8px] font-bold uppercase tracking-[0.2em] text-white/20 italic">{slides[currentSlide].id}</span>
+        <div className="flex flex-col items-end gap-1 px-8">
+           <span className="text-[12px] font-bold uppercase tracking-[0.4em] text-[#c1ff72]">Investor Pitch 2026</span>
+           <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/20 italic">{slides[currentSlide].id}</span>
         </div>
       </header>
 
       {/* SLIDE BOUNDARY (Centered, No Scroll) */}
-      <main className="flex-1 flex items-center justify-center px-12 relative z-10">
-        <div className="w-full max-w-6xl max-h-[70vh] relative">
+      <main className="flex-1 flex items-center justify-center px-20 relative z-10">
+        <div className="w-full max-w-[85vw] max-h-[75vh] relative">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentSlide}
