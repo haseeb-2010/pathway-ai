@@ -96,24 +96,91 @@ function InternshipsContent() {
 // --- Sub-Components ---
 
 function DashboardTab({ userId }: { userId: string | null }) {
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      <StatCard title="Active Applications" value="0" icon={<Briefcase className="w-5 h-5" />} color="#c1ff72" />
-      <StatCard title="Matched Opps" value="0" icon={<Target className="w-5 h-5" />} color="#ffe44d" />
-      <StatCard title="Interviews Done" value="0" icon={<MessageSquare className="w-5 h-5" />} color="#00ff88" />
-      <StatCard title="Avg Score" value="N/A" icon={<Trophy className="w-5 h-5" />} color="#ff4444" />
-      
-      <div className="col-span-full mt-8">
-        <div className="glass p-12 rounded-[40px] border-white/5 flex flex-col items-center text-center">
-          <div className="w-20 h-20 rounded-3xl bg-[#c1ff72]/10 flex items-center justify-center mb-8">
-            <Sparkles className="w-10 h-10 text-[#c1ff72]" />
-          </div>
-          <h2 className="text-3xl font-bold mb-4">Start Your Journey.</h2>
-          <p className="text-white/40 max-w-md mx-auto mb-10 leading-relaxed">
-            Begin by searching for opportunities or tracking your existing applications to get AI-powered insights and interview prep.
-          </p>
-        </div>
+  const [stats, setStats] = useState({
+    activeApps: 0,
+    matchedOpps: 0,
+    interviewsDone: 0,
+    avgScore: 0
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchStats() {
+      if (!userId) return;
+      setLoading(true);
+      try {
+        const [appsRes, sessionsRes, matchRes] = await Promise.all([
+          supabase.from('applications').select('id, status').eq('profile_id', userId),
+          supabase.from('interview_sessions').select('score').eq('profile_id', userId).not('score', 'is', null),
+          fetch('/api/match', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId, type: 'internships' })
+          }).then(res => res.json()).catch(() => ({ matches: [] }))
+        ]);
+
+        const activeApps = appsRes.data?.filter(a => ['Wishlist', 'Applied', 'Interview'].includes(a.status)).length || 0;
+        const interviewsDone = sessionsRes.data?.length || 0;
+        const scores = sessionsRes.data?.map(s => parseFloat(s.score)).filter(s => !isNaN(s)) || [];
+        const avgScore = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+        const matchedOpps = matchRes.matches?.length || 0;
+
+        setStats({
+          activeApps,
+          matchedOpps,
+          interviewsDone,
+          avgScore
+        });
+      } catch (error) {
+        console.error("Error fetching dashboard stats:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchStats();
+  }, [userId]);
+
+  if (loading) {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {[1, 2, 3, 4].map(i => (
+          <div key={i} className="glass p-8 rounded-[32px] border-white/5 animate-pulse h-32" />
+        ))}
       </div>
+    );
+  }
+
+  return (
+    <div className="space-y-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <StatCard title="Active Applications" value={stats.activeApps.toString()} icon={<Briefcase className="w-5 h-5" />} color="#c1ff72" />
+        <StatCard title="Matched Opps" value={stats.matchedOpps.toString()} icon={<Target className="w-5 h-5" />} color="#ffe44d" />
+        <StatCard title="Interviews Done" value={stats.interviewsDone.toString()} icon={<MessageSquare className="w-5 h-5" />} color="#00ff88" />
+        <StatCard title="Avg Score" value={stats.avgScore > 0 ? `${stats.avgScore}%` : "N/A"} icon={<Trophy className="w-5 h-5" />} color="#ff4444" />
+      </div>
+
+      {stats.activeApps === 0 && stats.interviewsDone === 0 ? (
+        <div className="col-span-full">
+          <div className="glass p-12 md:p-20 rounded-[40px] border-white/5 flex flex-col items-center text-center">
+            <div className="w-20 h-20 rounded-3xl bg-[#c1ff72]/10 flex items-center justify-center mb-8">
+              <Sparkles className="w-10 h-10 text-[#c1ff72]" />
+            </div>
+            <h2 className="text-3xl font-bold mb-4">Start Your Journey.</h2>
+            <p className="text-white/40 max-w-md mx-auto mb-10 leading-relaxed">
+              Begin by searching for opportunities or tracking your existing applications to get AI-powered insights and interview prep.
+            </p>
+          </div>
+        </div>
+      ) : (
+        <div className="grid lg:grid-cols-2 gap-8">
+           <div className="glass p-8 rounded-[40px] border-white/5 space-y-6">
+              <h3 className="text-xl font-bold">Recent Activity</h3>
+              <div className="space-y-4">
+                 <p className="text-white/20 text-xs font-bold uppercase tracking-widest">Stay tuned for detailed analytics</p>
+              </div>
+           </div>
+        </div>
+      )}
     </div>
   );
 }
