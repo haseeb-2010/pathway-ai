@@ -137,9 +137,9 @@ export default function ProfilePage() {
   );
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8 md:space-y-12 pb-40 px-4 md:px-0">
+    <div className="max-w-6xl mx-auto space-y-8 md:space-y-12 pb-40 px-4 md:px-0 overflow-x-hidden">
       {/* Profile Header Hero */}
-      <div className="relative glass p-4 md:p-16 rounded-[24px] md:rounded-[48px] border-white/5 overflow-hidden">
+      <div className="relative glass p-6 md:p-16 rounded-[32px] md:rounded-[48px] border-white/5 overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#c1ff72]/5 blur-[100px] rounded-full -mr-32 -mt-32" />
         
         <div className="flex flex-col md:flex-row items-center gap-6 md:gap-10 relative z-10">
@@ -150,69 +150,69 @@ export default function ProfilePage() {
             {!isEditing && (
               <button 
                 onClick={() => setIsEditing(true)}
-                className="absolute -bottom-4 -right-4 bg-[#c1ff72] text-[#061a12] p-4 rounded-2xl shadow-xl hover:scale-110 active:scale-95 transition-all"
+                className="absolute -bottom-2 -right-2 md:-bottom-4 md:-right-4 bg-[#c1ff72] text-[#061a12] p-3 md:p-4 rounded-xl md:rounded-2xl shadow-xl hover:scale-110 active:scale-95 transition-all"
               >
-                <Pencil className="w-5 h-5" />
+                <Pencil className="w-4 h-4 md:w-5 md:h-5" />
               </button>
             )}
           </div>
 
-          <div className="text-center md:text-left space-y-3 md:space-y-4 flex-1">
+          <div className="text-center md:text-left space-y-3 md:space-y-4 flex-1 min-w-0">
             <div className="space-y-1 md:space-y-2">
               <span className="text-[10px] font-bold text-[#c1ff72] uppercase tracking-[0.4em]">Academic Dossier</span>
-              <h1 className="text-3xl md:text-6xl font-bold tracking-tight text-white break-words">{profile.full_name}</h1>
+              <h1 className="text-2xl md:text-6xl font-bold tracking-tight text-white break-words">{profile.full_name}</h1>
             </div>
             
-            <div className="flex flex-wrap justify-center md:justify-start gap-4">
-              <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-white/40 text-xs">
+            <div className="flex flex-wrap justify-center md:justify-start gap-2 md:gap-4">
+              <div className="flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-xl bg-white/5 border border-white/10 text-white/40 text-[10px] md:text-xs">
                 <MapPin className="w-3 h-3" /> {profile.location || "Location Not Set"}
               </div>
-              <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-white/40 text-xs">
+              <div className="flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-xl bg-white/5 border border-white/10 text-white/40 text-[10px] md:text-xs">
                 <Phone className="w-3 h-3" /> {profile.phone || "Phone Not Set"}
               </div>
             </div>
           </div>
 
           {isEditing && (
-            <div className="flex gap-4">
+            <div className="flex flex-wrap justify-center gap-3 w-full md:w-auto">
               <button 
                 onClick={() => setIsEditing(false)}
-                className="p-4 rounded-2xl border border-white/10 text-white/40 hover:text-white transition-all"
+                className="flex-1 md:flex-none p-4 rounded-2xl border border-white/10 text-white/40 hover:text-white transition-all flex items-center justify-center"
               >
                 <X className="w-5 h-5" />
               </button>
               <button 
                 onClick={handleSave}
                 disabled={saving}
-                className="bg-[#c1ff72] text-[#061a12] px-8 py-4 rounded-2xl font-bold text-xs uppercase tracking-widest flex items-center gap-3 hover:scale-105 active:scale-95 transition-all disabled:opacity-50"
+                className="flex-[2] md:flex-none bg-[#c1ff72] text-[#061a12] px-8 py-4 rounded-2xl font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-3 hover:scale-105 active:scale-95 transition-all disabled:opacity-50"
               >
                 {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                Save Changes
+                Save
               </button>
             </div>
           )}
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-8">
+      <div className="grid lg:grid-cols-3 gap-6 md:gap-8 overflow-hidden">
         {/* Main Info Column */}
         <div className="lg:col-span-2 space-y-6 md:space-y-8">
           
           {/* Identity & Contact */}
-          <div className="glass p-4 md:p-12 rounded-[24px] md:rounded-[48px] border-white/5 space-y-8 md:space-y-10 overflow-hidden">
+          <div className="glass p-6 md:p-12 rounded-[32px] md:rounded-[48px] border-white/5 space-y-6 md:space-y-10 overflow-hidden">
             <div className="flex items-center gap-4">
-              <User className="w-6 h-6 text-[#c1ff72]" />
-              <h2 className="text-2xl font-bold">Personal Identification</h2>
+              <User className="w-5 h-5 md:w-6 md:h-6 text-[#c1ff72]" />
+              <h2 className="text-xl md:text-2xl font-bold">Personal Identification</h2>
             </div>
             
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid md:grid-cols-2 gap-6 md:gap-8">
               <div className="space-y-3">
                 <label className="text-[10px] font-bold text-white/20 uppercase tracking-widest ml-1">Full Legal Name</label>
                 <input 
                   disabled={!isEditing}
                   value={profile.full_name}
                   onChange={e => setProfile({...profile, full_name: e.target.value})}
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-[#c1ff72]/50 transition-all disabled:opacity-50"
+                  className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 md:px-6 py-3 md:py-4 text-sm md:text-base text-white focus:outline-none focus:border-[#c1ff72]/50 transition-all disabled:opacity-50"
                 />
               </div>
               <div className="space-y-3">
@@ -221,7 +221,7 @@ export default function ProfilePage() {
                   disabled={!isEditing}
                   value={profile.phone}
                   onChange={e => setProfile({...profile, phone: e.target.value})}
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-[#c1ff72]/50 transition-all disabled:opacity-50"
+                  className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 md:px-6 py-3 md:py-4 text-sm md:text-base text-white focus:outline-none focus:border-[#c1ff72]/50 transition-all disabled:opacity-50"
                 />
               </div>
               <div className="space-y-3">
@@ -230,18 +230,18 @@ export default function ProfilePage() {
                   disabled={!isEditing}
                   value={profile.location}
                   onChange={e => setProfile({...profile, location: e.target.value})}
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-[#c1ff72]/50 transition-all disabled:opacity-50"
+                  className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 md:px-6 py-3 md:py-4 text-sm md:text-base text-white focus:outline-none focus:border-[#c1ff72]/50 transition-all disabled:opacity-50"
                 />
               </div>
             </div>
           </div>
 
           {/* Academic Background */}
-          <div className="glass p-4 md:p-12 rounded-[24px] md:rounded-[48px] border-white/5 space-y-8 md:space-y-10 overflow-hidden">
+          <div className="glass p-6 md:p-12 rounded-[32px] md:rounded-[48px] border-white/5 space-y-6 md:space-y-10 overflow-hidden">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <GraduationCap className="w-6 h-6 text-[#c1ff72]" />
-                <h2 className="text-2xl font-bold">Academic Journey</h2>
+                <GraduationCap className="w-5 h-5 md:w-6 md:h-6 text-[#c1ff72]" />
+                <h2 className="text-xl md:text-2xl font-bold">Academic Journey</h2>
               </div>
               {isEditing && (
                 <button 
@@ -253,39 +253,39 @@ export default function ProfilePage() {
               )}
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-4 md:space-y-6">
               {education.map((edu, i) => (
-                <div key={i} className="p-6 md:p-8 rounded-[32px] bg-white/[0.02] border border-white/5 relative group">
+                <div key={i} className="p-5 md:p-8 rounded-[24px] md:rounded-[32px] bg-white/[0.02] border border-white/5 relative group overflow-hidden">
                   {isEditing && (
                     <button 
                       onClick={() => setEducation(education.filter((_, idx) => idx !== i))}
-                      className="absolute top-6 right-6 text-white/10 hover:text-red-500 transition-all"
+                      className="absolute top-4 right-4 md:top-6 md:right-6 text-white/10 hover:text-red-500 transition-all"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
                   )}
-                  <div className="grid gap-4">
+                  <div className="grid gap-2 md:gap-4">
                     <input 
                       disabled={!isEditing}
-                      placeholder="Institution (e.g. LUMS)"
+                      placeholder="Institution"
                       value={edu.institution}
                       onChange={e => {
                         const next = [...education];
                         next[i].institution = e.target.value;
                         setEducation(next);
                       }}
-                      className="bg-transparent text-xl font-bold text-white outline-none placeholder:text-white/10 border-none p-0"
+                      className="bg-transparent text-lg md:text-xl font-bold text-white outline-none placeholder:text-white/10 border-none p-0 w-full"
                     />
                     <input 
                       disabled={!isEditing}
-                      placeholder="Degree (e.g. B.Sc Computer Science)"
+                      placeholder="Degree"
                       value={edu.degree}
                       onChange={e => {
                         const next = [...education];
                         next[i].degree = e.target.value;
                         setEducation(next);
                       }}
-                      className="bg-transparent text-white/60 text-sm outline-none placeholder:text-white/5 border-none p-0"
+                      className="bg-transparent text-white/60 text-xs md:text-sm outline-none placeholder:text-white/5 border-none p-0 w-full"
                     />
                   </div>
                 </div>
@@ -294,11 +294,11 @@ export default function ProfilePage() {
           </div>
 
           {/* Work Experience */}
-          <div className="glass p-4 md:p-12 rounded-[24px] md:rounded-[48px] border-white/5 space-y-8 md:space-y-10 overflow-hidden">
+          <div className="glass p-6 md:p-12 rounded-[32px] md:rounded-[48px] border-white/5 space-y-6 md:space-y-10 overflow-hidden">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <Briefcase className="w-6 h-6 text-[#c1ff72]" />
-                <h2 className="text-2xl font-bold">Professional Path</h2>
+                <Briefcase className="w-5 h-5 md:w-6 md:h-6 text-[#c1ff72]" />
+                <h2 className="text-xl md:text-2xl font-bold">Professional Path</h2>
               </div>
               {isEditing && (
                 <button 
@@ -310,18 +310,18 @@ export default function ProfilePage() {
               )}
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-4 md:space-y-6">
               {experience.map((exp, i) => (
-                <div key={i} className="p-6 md:p-8 rounded-[32px] bg-white/[0.02] border border-white/5 relative group">
+                <div key={i} className="p-5 md:p-8 rounded-[24px] md:rounded-[32px] bg-white/[0.02] border border-white/5 relative group overflow-hidden">
                   {isEditing && (
                     <button 
                       onClick={() => setExperience(experience.filter((_, idx) => idx !== i))}
-                      className="absolute top-6 right-6 text-white/10 hover:text-red-500 transition-all"
+                      className="absolute top-4 right-4 md:top-6 md:right-6 text-white/10 hover:text-red-500 transition-all"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
                   )}
-                  <div className="grid gap-4">
+                  <div className="grid gap-2 md:gap-4">
                     <input 
                       disabled={!isEditing}
                       placeholder="Company"
@@ -331,7 +331,7 @@ export default function ProfilePage() {
                         next[i].company = e.target.value;
                         setExperience(next);
                       }}
-                      className="bg-transparent text-xl font-bold text-white outline-none placeholder:text-white/10 border-none p-0"
+                      className="bg-transparent text-lg md:text-xl font-bold text-white outline-none placeholder:text-white/10 border-none p-0 w-full"
                     />
                     <input 
                       disabled={!isEditing}
@@ -342,7 +342,7 @@ export default function ProfilePage() {
                         next[i].position = e.target.value;
                         setExperience(next);
                       }}
-                      className="bg-transparent text-white/60 text-sm outline-none placeholder:text-white/5 border-none p-0"
+                      className="bg-transparent text-white/60 text-xs md:text-sm outline-none placeholder:text-white/5 border-none p-0 w-full"
                     />
                   </div>
                 </div>
@@ -352,9 +352,9 @@ export default function ProfilePage() {
         </div>
 
         {/* Sidebar Info Column */}
-        <div className="space-y-6 md:space-y-8">
+        <div className="space-y-6 md:space-y-8 overflow-hidden">
           {/* Skills */}
-          <div className="glass p-4 md:p-10 rounded-[24px] md:rounded-[48px] border-white/5 space-y-6 md:space-y-8 overflow-hidden">
+          <div className="glass p-6 md:p-10 rounded-[32px] md:rounded-[48px] border-white/5 space-y-6 md:space-y-8 overflow-hidden">
             <div className="flex items-center justify-between">
               <h3 className="font-bold uppercase text-[10px] tracking-widest text-white/20">Competencies</h3>
               {isEditing && (
@@ -371,7 +371,7 @@ export default function ProfilePage() {
               {skills.map((skill, i) => (
                 <div key={i} className="group relative">
                   {isEditing ? (
-                    <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10">
+                    <div className="flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-xl bg-white/5 border border-white/10">
                       <input 
                         value={skill.name}
                         onChange={e => {
@@ -379,14 +379,14 @@ export default function ProfilePage() {
                           next[i].name = e.target.value;
                           setSkills(next);
                         }}
-                        className="bg-transparent text-[10px] font-bold text-white outline-none w-20"
+                        className="bg-transparent text-[10px] font-bold text-white outline-none w-16 md:w-20"
                       />
                       <button onClick={() => setSkills(skills.filter((_, idx) => idx !== i))}>
                         <X className="w-3 h-3 text-white/20 hover:text-red-500" />
                       </button>
                     </div>
                   ) : (
-                    <div className="px-4 py-2 rounded-xl bg-[#c1ff72]/5 border border-[#c1ff72]/20 text-[#c1ff72] text-[10px] font-bold uppercase tracking-widest">
+                    <div className="px-3 py-1.5 md:px-4 md:py-2 rounded-xl bg-[#c1ff72]/5 border border-[#c1ff72]/20 text-[#c1ff72] text-[10px] font-bold uppercase tracking-widest">
                       {skill.name}
                     </div>
                   )}
@@ -396,7 +396,7 @@ export default function ProfilePage() {
           </div>
 
           {/* Certificates */}
-          <div className="glass p-4 md:p-10 rounded-[24px] md:rounded-[48px] border-white/5 space-y-6 md:space-y-8 overflow-hidden">
+          <div className="glass p-6 md:p-10 rounded-[32px] md:rounded-[48px] border-white/5 space-y-6 md:space-y-8 overflow-hidden">
             <div className="flex items-center justify-between">
               <h3 className="font-bold uppercase text-[10px] tracking-widest text-white/20">Certifications</h3>
               {isEditing && (
@@ -411,9 +411,9 @@ export default function ProfilePage() {
             
             <div className="space-y-4">
               {certs.map((cert, i) => (
-                <div key={i} className="flex gap-4 items-start relative group">
-                  <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center shrink-0">
-                    <FileBadge className="w-5 h-5 text-white/20" />
+                <div key={i} className="flex gap-3 md:gap-4 items-start relative group overflow-hidden">
+                  <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-white/5 flex items-center justify-center shrink-0">
+                    <FileBadge className="w-4 h-4 md:w-5 md:h-5 text-white/20" />
                   </div>
                   <div className="flex-1 min-w-0">
                     {isEditing ? (
@@ -426,7 +426,7 @@ export default function ProfilePage() {
                             next[i].name = e.target.value;
                             setCerts(next);
                           }}
-                          className="bg-transparent text-xs font-bold text-white outline-none w-full border-b border-white/5 focus:border-[#c1ff72]/30"
+                          className="bg-transparent text-[10px] md:text-xs font-bold text-white outline-none w-full border-b border-white/5 focus:border-[#c1ff72]/30"
                         />
                         <input 
                           value={cert.issuer}
@@ -436,13 +436,13 @@ export default function ProfilePage() {
                             next[i].issuer = e.target.value;
                             setCerts(next);
                           }}
-                          className="bg-transparent text-[10px] text-white/30 outline-none w-full"
+                          className="bg-transparent text-[8px] md:text-[10px] text-white/30 outline-none w-full"
                         />
                       </div>
                     ) : (
                       <>
-                        <p className="text-xs font-bold text-white truncate">{cert.name}</p>
-                        <p className="text-[10px] text-white/30 truncate">{cert.issuer}</p>
+                        <p className="text-[10px] md:text-xs font-bold text-white truncate">{cert.name}</p>
+                        <p className="text-[8px] md:text-[10px] text-white/30 truncate">{cert.issuer}</p>
                       </>
                     )}
                   </div>
@@ -460,18 +460,18 @@ export default function ProfilePage() {
           </div>
 
           {/* AI Readiness Card */}
-          <div className="glass p-8 rounded-[40px] border-white/5 bg-gradient-to-br from-[#c1ff72]/10 to-transparent">
+          <div className="glass p-6 md:p-8 rounded-[32px] md:rounded-[40px] border-white/5 bg-gradient-to-br from-[#c1ff72]/10 to-transparent overflow-hidden">
              <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 rounded-2xl bg-[#c1ff72] flex items-center justify-center">
-                   <Award className="w-6 h-6 text-[#061a12]" />
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-[#c1ff72] flex items-center justify-center shrink-0">
+                   <Award className="w-5 h-5 md:w-6 md:h-6 text-[#061a12]" />
                 </div>
-                <h4 className="font-bold">AI Match Readiness</h4>
+                <h4 className="font-bold text-sm md:text-base">AI Match Readiness</h4>
              </div>
              <div className="space-y-4">
                 <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
                    <div className="h-full bg-[#c1ff72] w-[85%]" />
                 </div>
-                <p className="text-[10px] text-white/40 font-bold uppercase tracking-widest">Profile is 85% optimized for Copilot</p>
+                <p className="text-[9px] md:text-[10px] text-white/40 font-bold uppercase tracking-widest">Profile is 85% optimized for Copilot</p>
              </div>
           </div>
         </div>
