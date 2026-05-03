@@ -534,6 +534,13 @@ function InternshipDetailModal({ isOpen, onClose, data }: { isOpen: boolean, onC
     </div>
   );
 }
+function TrackerModal({ isOpen, onClose, userId, onRefresh, initialData }: { 
+  isOpen: boolean, 
+  onClose: () => void, 
+  userId: string | null, 
+  onRefresh: () => void,
+  initialData?: any 
+}) {
   const [formData, setFormData] = useState({
     company: '',
     role: '',
@@ -545,6 +552,32 @@ function InternshipDetailModal({ isOpen, onClose, data }: { isOpen: boolean, onC
     notes: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (initialData) {
+      setFormData({
+        company: initialData.company || '',
+        role: initialData.role || '',
+        status: initialData.status || 'Applied',
+        priority: initialData.priority || 'Medium',
+        location: initialData.location || '',
+        link: initialData.link || '',
+        applied_at: initialData.applied_at || new Date().toISOString().split('T')[0],
+        notes: initialData.notes || ''
+      });
+    } else {
+      setFormData({
+        company: '',
+        role: '',
+        status: 'Applied',
+        priority: 'Medium',
+        location: '',
+        link: '',
+        applied_at: new Date().toISOString().split('T')[0],
+        notes: ''
+      });
+    }
+  }, [initialData, isOpen]);
 
   if (!isOpen) return null;
 
