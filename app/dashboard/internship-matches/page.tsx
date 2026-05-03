@@ -20,7 +20,8 @@ import {
   Sparkles,
   Search,
   Calendar,
-  X
+  X,
+  Edit2
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
@@ -42,6 +43,7 @@ export default function InternshipMatchesPage() {
   // Detail Modal State
   const [selectedJob, setSelectedJob] = useState<any>(null);
   const [isDetailLoading, setIsDetailLoading] = useState(false);
+  const [editingApp, setEditingApp] = useState<any>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -250,70 +252,98 @@ export default function InternshipMatchesPage() {
             key="matches"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
           >
-            {matches.map((job, i) => (
-              <motion.div
-                key={job.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.05 }}
-                className="glass group p-8 rounded-[40px] border-white/5 hover:border-[#c1ff72]/30 transition-all flex flex-col relative overflow-hidden"
-              >
-                <div className="absolute top-6 right-6">
-                  <div className="px-3 py-1 rounded-full bg-[#c1ff72]/10 border border-[#c1ff72]/20">
-                    <span className="text-[10px] font-bold text-[#c1ff72] uppercase tracking-widest">
-                      {Math.round(job.similarity * 100)}% Match
-                    </span>
-                  </div>
-                </div>
-
-                <div className="space-y-6 flex-1">
-                  <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center font-bold text-[#c1ff72] text-xl">
-                    {job.company[0]}
-                  </div>
-
-                  <div>
-                    <h3 className="text-xl font-bold mb-1">{job.role}</h3>
-                    <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest">{job.company}</p>
-                  </div>
-
-                  <div className="flex flex-wrap gap-4">
-                    <div className="flex items-center gap-2 text-white/30 text-[10px] font-bold uppercase tracking-widest">
-                      <MapPin className="w-3 h-3" /> {job.location}
-                    </div>
-                    <div className="flex items-center gap-2 text-white/30 text-[10px] font-bold uppercase tracking-widest">
-                      <Clock className="w-3 h-3" /> {job.duration}
-                    </div>
-                  </div>
-
-                  <p className="text-xs text-white/40 line-clamp-3 leading-relaxed">
-                    {job.description}
-                  </p>
-
-                  {job.match_why && (
-                    <div className="p-4 rounded-2xl bg-[#c1ff72]/5 border border-[#c1ff72]/10 space-y-2">
-                      <div className="flex items-center gap-2">
-                        <Sparkles className="w-3 h-3 text-[#c1ff72]" />
-                        <span className="text-[8px] font-bold text-[#c1ff72] uppercase tracking-widest">Pathway Insight</span>
+            {loading ? (
+              <div className="py-40 flex flex-col items-center justify-center space-y-8">
+                 <div className="relative">
+                    <div className="w-24 h-24 rounded-full border-2 border-[#c1ff72]/20 border-t-[#c1ff72] animate-spin" />
+                    <Sparkles className="absolute inset-0 m-auto w-8 h-8 text-[#c1ff72] animate-pulse" />
+                 </div>
+                 <div className="text-center space-y-2">
+                    <h3 className="text-xl font-bold uppercase tracking-[0.2em]">RAG Engine Pulse</h3>
+                    <p className="text-white/30 text-sm font-medium italic">Scouring global databases for your perfect fit...</p>
+                 </div>
+              </div>
+            ) : matches.length > 0 ? (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {matches.map((job, i) => (
+                  <motion.div
+                    key={job.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.05 }}
+                    className="glass group p-8 rounded-[40px] border-white/5 hover:border-[#c1ff72]/30 transition-all flex flex-col relative overflow-hidden"
+                  >
+                    <div className="absolute top-6 right-6">
+                      <div className="px-3 py-1 rounded-full bg-[#c1ff72]/10 border border-[#c1ff72]/20">
+                        <span className="text-[10px] font-bold text-[#c1ff72] uppercase tracking-widest">
+                          {Math.round(job.similarity * 100)}% Match
+                        </span>
                       </div>
-                      <p className="text-[11px] text-[#c1ff72]/80 leading-relaxed italic">
-                        "{job.match_why}"
-                      </p>
                     </div>
-                  )}
-                </div>
 
-                <div className="mt-8 pt-8 border-t border-white/5 flex items-center justify-between">
-                  <div className="text-[#c1ff72] text-xs font-bold">
-                    {job.currency} {job.stipend?.toLocaleString()}
-                  </div>
-                  <button className="flex items-center gap-2 text-[10px] font-bold text-white/40 hover:text-[#c1ff72] uppercase tracking-widest transition-colors">
-                    Details <ChevronRight className="w-4 h-4" />
-                  </button>
-                </div>
-              </motion.div>
-            ))}
+                    <div className="space-y-6 flex-1">
+                      <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center font-bold text-[#c1ff72] text-xl">
+                        {job.company[0]}
+                      </div>
+
+                      <div>
+                        <h3 className="text-xl font-bold mb-1">{job.role}</h3>
+                        <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest">{job.company}</p>
+                      </div>
+
+                      <div className="flex flex-wrap gap-4">
+                        <div className="flex items-center gap-2 text-white/30 text-[10px] font-bold uppercase tracking-widest">
+                          <MapPin className="w-3 h-3" /> {job.location}
+                        </div>
+                        <div className="flex items-center gap-2 text-white/30 text-[10px] font-bold uppercase tracking-widest">
+                          <Clock className="w-3 h-3" /> {job.duration}
+                        </div>
+                      </div>
+
+                      <p className="text-xs text-white/40 line-clamp-3 leading-relaxed">
+                        {job.description}
+                      </p>
+
+                      {job.match_why && (
+                        <div className="p-4 rounded-2xl bg-[#c1ff72]/5 border border-[#c1ff72]/10 space-y-2">
+                          <div className="flex items-center gap-2">
+                            <Sparkles className="w-3 h-3 text-[#c1ff72]" />
+                            <span className="text-[8px] font-bold text-[#c1ff72] uppercase tracking-widest">Pathway Insight</span>
+                          </div>
+                          <p className="text-[11px] text-[#c1ff72]/80 leading-relaxed italic">
+                            "{job.match_why}"
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="mt-8 pt-8 border-t border-white/5 flex items-center justify-between">
+                      <div className="text-[#c1ff72] text-xs font-bold">
+                        {job.currency} {job.stipend?.toLocaleString()}
+                      </div>
+                      <button 
+                        onClick={() => setSelectedJob(job)}
+                        className="flex items-center gap-2 text-[10px] font-bold text-white/40 hover:text-[#c1ff72] uppercase tracking-widest transition-colors"
+                      >
+                        Details <ChevronRight className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            ) : (
+              <div className="py-40 flex flex-col items-center text-center space-y-6">
+                 <div className="w-20 h-20 rounded-3xl bg-white/5 flex items-center justify-center text-white/10">
+                    <Search className="w-10 h-10" />
+                 </div>
+                 <div className="space-y-2">
+                    <h3 className="text-2xl font-bold">No Precise Matches Found</h3>
+                    <p className="text-white/30 max-w-sm mx-auto">Try adjusting your preferences or target countries for better alignment.</p>
+                 </div>
+                 <button onClick={() => setView('preferences')} className="text-[#c1ff72] text-[10px] font-bold uppercase tracking-widest hover:underline">Adjust Goals</button>
+              </div>
+            )}
           </motion.div>
         )}
 
@@ -336,7 +366,10 @@ export default function InternshipMatchesPage() {
                 />
               </div>
               <button 
-                onClick={() => setIsModalOpen(true)}
+                onClick={() => {
+                  setEditingApp(null);
+                  setIsModalOpen(true);
+                }}
                 className="bg-[#c1ff72] text-[#061a12] px-8 py-4 rounded-2xl font-bold text-[10px] uppercase tracking-widest flex items-center gap-2 hover:scale-105 transition-all shadow-lg shadow-[#c1ff72]/10"
               >
                 <Plus className="w-4 h-4" /> Add Application
@@ -379,6 +412,15 @@ export default function InternshipMatchesPage() {
                         <p className="text-xs font-bold">{new Date(app.updated_at || app.created_at).toLocaleDateString()}</p>
                      </div>
                      <div className="flex gap-2">
+                        <button 
+                           onClick={() => {
+                              setEditingApp(app);
+                              setIsModalOpen(true);
+                           }}
+                           className="p-3 rounded-xl bg-white/5 border border-white/5 text-white/40 hover:text-[#c1ff72] transition-all"
+                        >
+                           <Edit2 className="w-4 h-4" />
+                        </button>
                         <button className="p-3 rounded-xl bg-white/5 border border-white/5 text-white/40 hover:text-white transition-all">
                            <ExternalLink className="w-4 h-4" />
                         </button>
@@ -401,9 +443,13 @@ export default function InternshipMatchesPage() {
 
       <TrackerModal 
         isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
+        onClose={() => {
+          setIsModalOpen(false);
+          setEditingApp(null);
+        }} 
         userId={user?.id} 
-        onRefresh={fetchTrackerData} 
+        onRefresh={fetchTrackerData}
+        initialData={editingApp}
       />
 
       <InternshipDetailModal 
@@ -507,16 +553,30 @@ function InternshipDetailModal({ isOpen, onClose, data }: { isOpen: boolean, onC
     if (!userId || isSubmitting) return;
     setIsSubmitting(true);
 
-    const { error } = await supabase.from('applications').insert({
-      ...formData,
-      profile_id: userId
-    });
+    if (initialData) {
+      const { error } = await supabase
+        .from('applications')
+        .update(formData)
+        .eq('id', initialData.id);
 
-    if (error) {
-      alert("Failed to add application: " + error.message);
+      if (error) {
+        alert("Failed to update application: " + error.message);
+      } else {
+        onRefresh();
+        onClose();
+      }
     } else {
-      onRefresh();
-      onClose();
+      const { error } = await supabase.from('applications').insert({
+        ...formData,
+        profile_id: userId
+      });
+
+      if (error) {
+        alert("Failed to add application: " + error.message);
+      } else {
+        onRefresh();
+        onClose();
+      }
     }
     setIsSubmitting(false);
   };
@@ -531,7 +591,7 @@ function InternshipDetailModal({ isOpen, onClose, data }: { isOpen: boolean, onC
       >
         <div className="p-8 border-b border-white/5 flex items-center justify-between">
           <div>
-            <h3 className="text-2xl font-bold">Add application</h3>
+            <h3 className="text-2xl font-bold">{initialData ? 'Edit application' : 'Add application'}</h3>
             <p className="text-white/40 text-sm mt-1">Keep track of your professional pipeline.</p>
           </div>
           <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-xl transition-all">
@@ -605,7 +665,7 @@ function InternshipDetailModal({ isOpen, onClose, data }: { isOpen: boolean, onC
           <div className="pt-4 flex gap-4">
             <button type="button" onClick={onClose} className="flex-1 bg-white/5 py-4 rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-white/10 transition-all">Cancel</button>
             <button type="submit" disabled={isSubmitting} className="flex-1 bg-[#c1ff72] text-[#061a12] py-4 rounded-2xl font-bold text-xs uppercase tracking-widest hover:scale-105 transition-all flex items-center justify-center gap-2">
-              {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />} Add to Tracker
+              {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : initialData ? <CheckCircle2 className="w-4 h-4" /> : <Plus className="w-4 h-4" />} {initialData ? 'Save Changes' : 'Add to Tracker'}
             </button>
           </div>
         </form>

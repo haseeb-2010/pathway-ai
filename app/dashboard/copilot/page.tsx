@@ -482,9 +482,15 @@ function UniDetailModal({ isOpen, onClose, data, loading }: { isOpen: boolean, o
                  </div>
                )}
 
-               <div className="pt-10 flex gap-4">
-                  <button className="flex-1 bg-[#c1ff72] text-[#061a12] py-5 rounded-2xl font-bold uppercase tracking-widest text-xs hover:scale-[1.02] transition-all">Visit Official Site</button>
-                  <button className="flex-1 bg-white/5 text-white py-5 rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-white/10 transition-all border border-white/10">Add to Tracker</button>
+               <div className="pt-10">
+                  <a 
+                    href={data?.website || "#"} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="block w-full bg-[#c1ff72] text-[#061a12] py-5 rounded-2xl font-bold uppercase tracking-widest text-xs hover:scale-[1.02] transition-all text-center"
+                  >
+                    Visit Official Site
+                  </a>
                </div>
             </div>
           </>
