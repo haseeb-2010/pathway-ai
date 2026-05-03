@@ -12,7 +12,10 @@ import {
   Menu,
   X,
   Bell,
-  PanelLeft
+  PanelLeft,
+  Target,
+  Zap,
+  Bot
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/lib/supabase";
