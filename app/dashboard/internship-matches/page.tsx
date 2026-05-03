@@ -1,7 +1,8 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Briefcase, 
@@ -25,8 +26,12 @@ import {
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
-export default function InternshipMatchesPage() {
-  const [view, setView] = useState<'preferences' | 'matches' | 'tracker'>('preferences');
+function InternshipMatchesContent() {
+  const searchParams = useSearchParams();
+  const initialView = searchParams.get('view') as any;
+  const [view, setView] = useState<'preferences' | 'matches' | 'tracker'>(
+    initialView && ['preferences', 'matches', 'tracker'].includes(initialView) ? initialView : 'preferences'
+  );
   const [preferences, setPreferences] = useState({
     role: "",
     type: "Remote",
@@ -470,6 +475,13 @@ export default function InternshipMatchesPage() {
         }}
       />
     </div>
+  );
+}
+export default function InternshipMatchesPage() {
+  return (
+    <Suspense fallback={<div className="p-20 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-[#c1ff72]" /></div>}>
+      <InternshipMatchesContent />
+    </Suspense>
   );
 }
 
