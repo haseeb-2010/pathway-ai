@@ -180,7 +180,7 @@ export default function DashboardLayout({
                 className="fixed top-0 left-0 w-[80%] h-full bg-[#061a12] z-[70] p-8 border-r border-white/10 lg:hidden"
               >
                 <div className="flex items-center justify-between mb-12">
-                  <img src="/logo.svg" alt="Pathway Logo" className="h-8" />
+                  <img src="/logo.svg" alt="Pathway Logo" className="h-12 w-auto object-contain scale-125 origin-left" />
                   <button onClick={() => setIsSidebarOpen(false)}>
                     <X className="w-6 h-6 text-white/40" />
                   </button>
