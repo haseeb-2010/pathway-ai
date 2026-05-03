@@ -14,7 +14,8 @@ import {
   Filter,
   Globe,
   Trophy,
-  Zap
+  Zap,
+  Sparkles
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
@@ -137,6 +138,18 @@ export default function UniversitiesPage() {
                   <p className="text-xs text-white/40 line-clamp-3 leading-relaxed">
                     {uni.description}
                   </p>
+
+                  {uni.match_why && (
+                    <div className="p-4 rounded-2xl bg-[#c1ff72]/5 border border-[#c1ff72]/10 space-y-2">
+                      <div className="flex items-center gap-2">
+                        <Sparkles className="w-3 h-3 text-[#c1ff72]" />
+                        <span className="text-[8px] font-bold text-[#c1ff72] uppercase tracking-widest">Pathway Insight</span>
+                      </div>
+                      <p className="text-[11px] text-[#c1ff72]/80 leading-relaxed italic">
+                        "{uni.match_why}"
+                      </p>
+                    </div>
+                  )}
                 </div>
 
                 <div className="mt-8 pt-8 border-t border-white/5 flex items-center justify-between">

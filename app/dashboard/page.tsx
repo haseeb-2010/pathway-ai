@@ -136,7 +136,7 @@ export default function DashboardPage() {
         <div className="space-y-6">
            <div className="flex items-center justify-between">
               <h3 className="text-xl font-bold tracking-tight">Active Funnel</h3>
-              <Link href="/dashboard/internships" className="text-[10px] font-bold text-[#c1ff72] uppercase tracking-widest hover:underline">View Pipeline</Link>
+              <Link href="/dashboard/internship-matches" className="text-[10px] font-bold text-[#c1ff72] uppercase tracking-widest hover:underline">View Pipeline</Link>
            </div>
            
            <div className="space-y-4">
@@ -162,7 +162,7 @@ export default function DashboardPage() {
               )) : (
                 <div className="glass p-12 rounded-[32px] border-white/5 text-center space-y-4">
                    <p className="text-white/20 text-xs font-bold uppercase tracking-widest">No Active Applications</p>
-                   <Link href="/dashboard/internships" className="text-[#c1ff72] text-[10px] font-bold uppercase tracking-widest hover:underline">Start Matching</Link>
+                   <Link href="/dashboard/internship-matches" className="text-[#c1ff72] text-[10px] font-bold uppercase tracking-widest hover:underline">Start Matching</Link>
                 </div>
               )}
            </div>
