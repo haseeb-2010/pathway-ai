@@ -59,7 +59,6 @@ export default function DashboardLayout({
 
   const navItems = [
     { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
-    { name: "Uni Matches", href: "/dashboard/universities", icon: Target },
     { name: "Job Matches", href: "/dashboard/internship-matches", icon: Zap },
     { name: "Academic Copilot", href: "/dashboard/copilot", icon: BookOpen },
     { name: "AI Interview", href: "/dashboard/internships", icon: Briefcase },

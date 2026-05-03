@@ -48,13 +48,6 @@ export default function DashboardPage() {
 
       setStats([
         { 
-          label: "University Matches", 
-          value: uniMatches?.length || "24", // Fallback to 24 if matching not run
-          sub: "AI Analysis Complete", 
-          icon: Target, 
-          color: "#c1ff72" 
-        },
-        { 
           label: "Applications", 
           value: apps?.length || "0", 
           sub: `${apps?.filter(a => a.status !== 'Wishlist').length} Active Pipeline`, 
