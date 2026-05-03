@@ -456,12 +456,24 @@ export default function InternshipMatchesPage() {
         isOpen={!!selectedJob} 
         onClose={() => setSelectedJob(null)} 
         data={selectedJob} 
+        onAddToTracker={(job) => {
+          setEditingApp({
+            company: job.company,
+            role: job.role,
+            status: 'Applied',
+            priority: 'Medium',
+            link: job.link || '',
+            location: job.location
+          });
+          setIsModalOpen(true);
+          setSelectedJob(null);
+        }}
       />
     </div>
   );
 }
 
-function InternshipDetailModal({ isOpen, onClose, data }: { isOpen: boolean, onClose: () => void, data: any }) {
+function InternshipDetailModal({ isOpen, onClose, data, onAddToTracker }: { isOpen: boolean, onClose: () => void, data: any, onAddToTracker: (job: any) => void }) {
   if (!isOpen) return null;
 
   return (
@@ -527,7 +539,12 @@ function InternshipDetailModal({ isOpen, onClose, data }: { isOpen: boolean, onC
 
            <div className="pt-10 flex gap-4">
               <button className="flex-1 bg-[#c1ff72] text-[#061a12] py-5 rounded-2xl font-bold uppercase tracking-widest text-xs hover:scale-[1.02] transition-all">Apply Now</button>
-              <button className="flex-1 bg-white/5 text-white py-5 rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-white/10 transition-all border border-white/10">Add to Tracker</button>
+              <button 
+                onClick={() => onAddToTracker(data)}
+                className="flex-1 bg-white/5 text-white py-5 rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-white/10 transition-all border border-white/10"
+              >
+                Add to Tracker
+              </button>
            </div>
         </div>
       </motion.div>
